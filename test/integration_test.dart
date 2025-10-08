@@ -225,4 +225,109 @@ void main() {
       expect(response1.data['data']['custom'], 'Value1');
       expect(response2.data['data']['custom'], 'Value2');
     });
+
+    test('supports all built-in placeholders', () async {
+      await MayrFakeApi.init(
+        basePath: 'test/assets/api',
+        attachTo: dio,
+        delay: Duration.zero,
+      );
+
+      final response = await dio.get('https://example.com/all_placeholders?test=value');
+
+      expect(response.statusCode, 200);
+      final data = response.data['data'];
+
+      // Request context
+      expect(data['request']['method'], 'GET');
+      expect(data['request']['path'], isNotEmpty);
+      
+      // IDs
+      expect(data['ids']['uuid'], isNotEmpty);
+      expect(data['ids']['ulid'], isNotEmpty);
+      expect(data['ids']['id'], isNotEmpty);
+      expect(data['ids']['shortId'], isNotEmpty);
+      expect(data['ids']['hash'], isNotEmpty);
+      
+      // DateTime
+      expect(data['datetime']['timestamp'], isNotEmpty);
+      expect(data['datetime']['date'], matches(RegExp(r'^\d{4}-\d{2}-\d{2}$')));
+      expect(data['datetime']['time'], matches(RegExp(r'^\d{2}:\d{2}:\d{2}$')));
+      
+      // User
+      expect(data['user']['userId'], isNotEmpty);
+      expect(data['user']['email'], contains('@'));
+      expect(data['user']['username'], isNotEmpty);
+      expect(data['user']['firstName'], isNotEmpty);
+      expect(data['user']['lastName'], isNotEmpty);
+      expect(data['user']['fullName'], isNotEmpty);
+      expect(data['user']['avatar'], startsWith('https://'));
+      expect(data['user']['phone'], isNotEmpty);
+      expect(data['user']['token'], hasLength(64));
+      
+      // Location
+      expect(data['location']['country'], isNotEmpty);
+      expect(data['location']['countryCode'], isNotEmpty);
+      expect(data['location']['city'], isNotEmpty);
+      expect(data['location']['state'], isNotEmpty);
+      expect(data['location']['address'], isNotEmpty);
+      expect(data['location']['timezone'], isNotEmpty);
+      expect(data['location']['ipAddress'], matches(RegExp(r'^\d+\.\d+\.\d+\.\d+$')));
+      
+      // Business
+      expect(data['business']['currency'], isNotEmpty);
+      expect(data['business']['jobTitle'], isNotEmpty);
+      expect(data['business']['companyName'], isNotEmpty);
+      expect(data['business']['productName'], isNotEmpty);
+      expect(data['business']['sku'], startsWith('SKU-'));
+      
+      // Random
+      expect(data['random']['sentence'], isNotEmpty);
+      expect(data['random']['word'], isNotEmpty);
+      expect(data['random']['bool'], matches(RegExp(r'^(true|false)$')));
+      final randomInt = int.parse(data['random']['int']);
+      expect(randomInt, greaterThanOrEqualTo(1));
+      expect(randomInt, lessThanOrEqualTo(100));
+      final randomFloat = double.parse(data['random']['float']);
+      expect(randomFloat, greaterThanOrEqualTo(0));
+      expect(randomFloat, lessThanOrEqualTo(10));
+      expect(['apple', 'banana', 'orange'], contains(data['random']['choice']));
+      
+      // Design
+      expect(data['design']['hexColor'], matches(RegExp(r'^#[0-9A-F]{6}$')));
+      expect(data['design']['color'], isNotEmpty);
+      expect(data['design']['image'], equals('https://via.placeholder.com/300x200'));
+      
+      // Other
+      expect(data['other']['version'], matches(RegExp(r'^\d+\.\d+\.\d+$')));
+      expect(data['other']['statusCode'], '200');
+    });
+
+    test('parameterized placeholders work correctly', () async {
+      await MayrFakeApi.init(
+        basePath: 'test/assets/api',
+        attachTo: dio,
+        delay: Duration.zero,
+      );
+
+      final response = await dio.get('https://example.com/all_placeholders');
+      final data = response.data['data'];
+
+      // Test randomInt
+      final randomInt = int.parse(data['random']['int']);
+      expect(randomInt, greaterThanOrEqualTo(1));
+      expect(randomInt, lessThanOrEqualTo(100));
+
+      // Test randomFloat
+      final randomFloat = double.parse(data['random']['float']);
+      expect(randomFloat, greaterThanOrEqualTo(0));
+      expect(randomFloat, lessThanOrEqualTo(10));
+
+      // Test choose
+      expect(['apple', 'banana', 'orange'], contains(data['random']['choice']));
+
+      // Test image
+      expect(data['design']['image'], equals('https://via.placeholder.com/300x200'));
+    });
   });
+}

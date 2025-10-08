@@ -1,12 +1,3 @@
-## 1.1.0
-
-- 🎲 Added built-in placeholder support: `$uuid` and `$ulid`
-- 🔧 Added custom placeholder functionality for user-defined dynamic values
-- 🐛 Fixed test suite bugs (corrected URL paths and data access patterns)
-- 📚 Enhanced documentation with placeholder usage examples
-- ✅ Added comprehensive tests for placeholder features
-- 📦 Added `uuid` package dependency for UUID generation
-
 ## 1.0.0
 
 - 🎉 Initial stable release
@@ -15,6 +6,8 @@
 - 🔄 Supports all HTTP methods (GET, POST, PUT, DELETE, etc.)
 - 🌟 Dynamic path support with wildcards (e.g., `/user/-/profile`)
 - 🔧 Placeholder replacement in JSON responses (`$1`, `$2`, `$timestamp`)
+- 🎲 Built-in placeholder support: `$uuid` and `$ulid`
+- 🔧 Custom placeholder functionality for user-defined dynamic values
 - 📭 Automatic 204 No Content response for empty JSON files
 - ⚠️ Error simulation with `error.json` files
 - 🚫 Customizable 404 not found responses
@@ -22,6 +15,8 @@
 - 🎛️ Enable/disable toggle for development/production
 - 📚 Comprehensive documentation and examples
 - ✅ Full test coverage
+- 🐛 Fixed test suite bugs (corrected URL paths and data access patterns)
+- 📦 Added `uuid` and `faker` package dependencies
 
 ## 0.0.1
 
