@@ -1,0 +1,9 @@
+{
+  "statusCode": 201,
+  "data": {
+    "message": "Profile updated successfully",
+    "id": 1,
+    "name": "John Doe Updated",
+    "email": "john.doe@example.com"
+  }
+}
