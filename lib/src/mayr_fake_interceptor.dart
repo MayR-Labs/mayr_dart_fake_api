@@ -83,7 +83,9 @@ class MayrFakeInterceptor extends Interceptor {
           Response(
             requestOptions: options,
             statusCode: response.statusCode,
-            data: response.data,
+            // Expose full JSON structure so callers can access
+            // response.data['data'] as in the integration tests
+            data: {'statusCode': response.statusCode, 'data': response.data},
           ),
         );
       }
@@ -126,7 +128,13 @@ class MayrFakeInterceptor extends Interceptor {
 
     // Try with dynamic paths (wildcards)
     final parts = requestPath.split('/');
-    final wildcardResponse = await _tryWithWildcards(parts, method, 0, [], options);
+    final wildcardResponse = await _tryWithWildcards(
+      parts,
+      method,
+      0,
+      [],
+      options,
+    );
 
     if (wildcardResponse != null) {
       return wildcardResponse;
