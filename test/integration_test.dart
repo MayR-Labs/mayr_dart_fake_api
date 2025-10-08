@@ -69,9 +69,7 @@ void main() {
         delay: Duration.zero,
       );
 
-      final response = await dio.get(
-        'https://example.com/dynamic/123/data',
-      );
+      final response = await dio.get('https://example.com/dynamic/123/data');
 
       expect(response.statusCode, 200);
       expect(response.data['data']['id'], '123');
@@ -140,9 +138,7 @@ void main() {
       );
 
       // GET
-      final getResponse = await dio.get(
-        'https://example.com/test_endpoint',
-      );
+      final getResponse = await dio.get('https://example.com/test_endpoint');
       expect(getResponse.statusCode, 200);
 
       // Other methods will return 404 since we don't have post.json, etc.
@@ -181,13 +177,13 @@ void main() {
       expect(response.data['data']['timestamp'], isNotEmpty);
       expect(response.data['data']['uuid'], isNotEmpty);
       expect(response.data['data']['ulid'], isNotEmpty);
-      
+
       // Validate UUID format (8-4-4-4-12)
       final uuidPattern = RegExp(
         r'^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$',
       );
       expect(uuidPattern.hasMatch(response.data['data']['uuid']), isTrue);
-      
+
       // Validate ULID format (26 characters)
       expect(response.data['data']['ulid'].length, 26);
     });
@@ -197,9 +193,7 @@ void main() {
         basePath: 'test/assets/api',
         attachTo: dio,
         delay: Duration.zero,
-        customPlaceholders: {
-          'customValue': () => 'MyCustomValue',
-        },
+        customPlaceholders: {'customValue': () => 'MyCustomValue'},
       );
 
       final response = await dio.get('https://example.com/placeholders');
@@ -214,9 +208,7 @@ void main() {
         basePath: 'test/assets/api',
         attachTo: dio,
         delay: Duration.zero,
-        customPlaceholders: {
-          'customValue': () => 'Value${++counter}',
-        },
+        customPlaceholders: {'customValue': () => 'Value${++counter}'},
       );
 
       final response1 = await dio.get('https://example.com/placeholders');
@@ -233,7 +225,9 @@ void main() {
         delay: Duration.zero,
       );
 
-      final response = await dio.get('https://example.com/all_placeholders?test=value');
+      final response = await dio.get(
+        'https://example.com/all_placeholders?test=value',
+      );
 
       expect(response.statusCode, 200);
       final data = response.data['data'];
@@ -241,19 +235,19 @@ void main() {
       // Request context
       expect(data['request']['method'], 'GET');
       expect(data['request']['path'], isNotEmpty);
-      
+
       // IDs
       expect(data['ids']['uuid'], isNotEmpty);
       expect(data['ids']['ulid'], isNotEmpty);
       expect(data['ids']['id'], isNotEmpty);
       expect(data['ids']['shortId'], isNotEmpty);
       expect(data['ids']['hash'], isNotEmpty);
-      
+
       // DateTime
       expect(data['datetime']['timestamp'], isNotEmpty);
       expect(data['datetime']['date'], matches(RegExp(r'^\d{4}-\d{2}-\d{2}$')));
       expect(data['datetime']['time'], matches(RegExp(r'^\d{2}:\d{2}:\d{2}$')));
-      
+
       // User
       expect(data['user']['userId'], isNotEmpty);
       expect(data['user']['email'], contains('@'));
@@ -264,7 +258,7 @@ void main() {
       expect(data['user']['avatar'], startsWith('https://'));
       expect(data['user']['phone'], isNotEmpty);
       expect(data['user']['token'], hasLength(64));
-      
+
       // Location
       expect(data['location']['country'], isNotEmpty);
       expect(data['location']['countryCode'], isNotEmpty);
@@ -272,15 +266,18 @@ void main() {
       expect(data['location']['state'], isNotEmpty);
       expect(data['location']['address'], isNotEmpty);
       expect(data['location']['timezone'], isNotEmpty);
-      expect(data['location']['ipAddress'], matches(RegExp(r'^\d+\.\d+\.\d+\.\d+$')));
-      
+      expect(
+        data['location']['ipAddress'],
+        matches(RegExp(r'^\d+\.\d+\.\d+\.\d+$')),
+      );
+
       // Business
       expect(data['business']['currency'], isNotEmpty);
       expect(data['business']['jobTitle'], isNotEmpty);
       expect(data['business']['companyName'], isNotEmpty);
       expect(data['business']['productName'], isNotEmpty);
       expect(data['business']['sku'], startsWith('SKU-'));
-      
+
       // Random
       expect(data['random']['sentence'], isNotEmpty);
       expect(data['random']['word'], isNotEmpty);
@@ -292,12 +289,15 @@ void main() {
       expect(randomFloat, greaterThanOrEqualTo(0));
       expect(randomFloat, lessThanOrEqualTo(10));
       expect(['apple', 'banana', 'orange'], contains(data['random']['choice']));
-      
+
       // Design
       expect(data['design']['hexColor'], matches(RegExp(r'^#[0-9A-F]{6}$')));
       expect(data['design']['color'], isNotEmpty);
-      expect(data['design']['image'], equals('https://via.placeholder.com/300x200'));
-      
+      expect(
+        data['design']['image'],
+        equals('https://via.placeholder.com/300x200'),
+      );
+
       // Other
       expect(data['other']['version'], matches(RegExp(r'^\d+\.\d+\.\d+$')));
       expect(data['other']['statusCode'], '200');
@@ -327,7 +327,10 @@ void main() {
       expect(['apple', 'banana', 'orange'], contains(data['random']['choice']));
 
       // Test image
-      expect(data['design']['image'], equals('https://via.placeholder.com/300x200'));
+      expect(
+        data['design']['image'],
+        equals('https://via.placeholder.com/300x200'),
+      );
     });
   });
 }
