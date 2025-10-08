@@ -37,7 +37,9 @@ It’s designed to make your development flow **smoother**, **faster**, and **in
 * 🧭 Supports folder-structured routing (e.g. `/api/user/profile.json`).
 * ⚡ Supports multiple HTTP methods (`GET`, `POST`, `PUT`, `DELETE`, etc.) using method-specific JSON naming.
 * ❌ Built-in 404 simulation with customizable resolver.
-* 🪄 Dynamic data support (custom resolvers and generators).
+* 🪄 Dynamic data support with wildcards and placeholders.
+* 🎲 Built-in placeholders: `$timestamp`, `$uuid`, `$ulid` for dynamic values.
+* 🔧 Custom placeholders: Define your own dynamic value generators.
 * 🧱 Lightweight — no dependencies on backend servers.
 * 🧍 Ideal for demos, offline-first apps, and rapid prototyping.
 * ⚙️ Enable or disable fake mode at runtime
@@ -245,13 +247,43 @@ Inside your dynamic JSON files, you can also reference the wildcard values using
   "data": {
     "userId": "$1",
     "name": "Dynamic user",
-    "timestamp": "$timestamp"
+    "timestamp": "$timestamp",
+    "uuid": "$uuid",
+    "ulid": "$ulid"
   }
 }
 ```
 
-Where `$1` will be replaced with the first wildcard value (e.g. `123`)
-and `$timestamp` automatically resolves to the current ISO timestamp.
+Where:
+- `$1`, `$2`, `$3`, etc. are replaced with wildcard values (e.g., `123`)
+- `$timestamp` resolves to the current ISO 8601 timestamp
+- `$uuid` generates a new UUID v4
+- `$ulid` generates a new ULID (Universally Unique Lexicographically Sortable Identifier)
+
+You can also define **custom placeholders**:
+
+```dart
+await MayrFakeApi.init(
+  basePath: 'assets/api',
+  attachTo: dio,
+  customPlaceholders: {
+    'sessionId': () => 'session-${DateTime.now().millisecondsSinceEpoch}',
+    'apiVersion': () => 'v2.0',
+  },
+);
+```
+
+Then in your JSON:
+
+```json
+{
+  "statusCode": 200,
+  "data": {
+    "sessionId": "$sessionId",
+    "apiVersion": "$apiVersion"
+  }
+}
+```
 
 ---
 
@@ -308,6 +340,8 @@ will output something like:
   Placeholders `$1`, `$2`, `$3`, etc. will be replaced accordingly.
 * If no placeholder is found, the file is returned as-is.
 * Works seamlessly with all HTTP methods (`GET`, `POST`, etc.).
+* Built-in placeholders: `$timestamp`, `$uuid`, `$ulid`
+* Custom placeholders can be defined during initialization to generate dynamic values
 
 ---
 
