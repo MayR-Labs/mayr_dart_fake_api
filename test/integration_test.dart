@@ -91,7 +91,7 @@ void main() {
           'https://example.com/test_endpoint/empty',
         );
         // This would fail to find the file, but if we had empty.json as a method file:
-        // expect(response.statusCode, 204);
+        expect(response.statusCode, 204);
       } catch (e) {
         // Expected since we don't have the exact setup
       }
