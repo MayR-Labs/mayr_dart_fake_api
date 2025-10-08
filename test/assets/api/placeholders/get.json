@@ -1,0 +1,9 @@
+{
+  "statusCode": 200,
+  "data": {
+    "timestamp": "$timestamp",
+    "uuid": "$uuid",
+    "ulid": "$ulid",
+    "custom": "$customValue"
+  }
+}
