@@ -1,3 +1,12 @@
+## 1.1.0
+
+- 🎲 Added built-in placeholder support: `$uuid` and `$ulid`
+- 🔧 Added custom placeholder functionality for user-defined dynamic values
+- 🐛 Fixed test suite bugs (corrected URL paths and data access patterns)
+- 📚 Enhanced documentation with placeholder usage examples
+- ✅ Added comprehensive tests for placeholder features
+- 📦 Added `uuid` package dependency for UUID generation
+
 ## 1.0.0
 
 - 🎉 Initial stable release

@@ -1,7 +1,7 @@
 name: mayr_fake_api
 description: >
   A Flutter package that intercepts API calls and returns fake JSON responses from local files during development.
-version: 1.0.0
+version: 1.1.0
 homepage: https://github.com/YoungMayor/mayr_dart_fake_api
 repository: https://github.com/YoungMayor/mayr_dart_fake_api
 issue_tracker: https://github.com/YoungMayor/mayr_dart_fake_api/issues
