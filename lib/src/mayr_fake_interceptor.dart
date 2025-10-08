@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'dart:math';
 import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart' as p;
+import 'package:uuid/uuid.dart';
 import 'mayr_fake_response.dart';
 
 /// Interceptor for Dio that intercepts requests and returns fake responses
@@ -18,13 +20,21 @@ class MayrFakeInterceptor extends Interceptor {
   /// Custom resolver for not found endpoints
   final MayrFakeResponse Function(String path, String method)? resolveNotFound;
 
+  /// Custom placeholder resolvers
+  /// Map of placeholder names (without $) to resolver functions
+  final Map<String, String Function()> customPlaceholders;
+
+  /// UUID generator instance
+  static final _uuid = Uuid();
+
   /// Creates a new interceptor
   MayrFakeInterceptor({
     required this.basePath,
     this.delay = const Duration(milliseconds: 500),
     this.enabled = true,
     this.resolveNotFound,
-  });
+    Map<String, String Function()>? customPlaceholders,
+  }) : customPlaceholders = customPlaceholders ?? {};
 
   @override
   void onRequest(
@@ -203,12 +213,21 @@ class MayrFakeInterceptor extends Interceptor {
     List<String> wildcardValues,
   ) {
     final timestamp = DateTime.now().toIso8601String();
+    final uuid = _uuid.v4();
+    final ulid = _generateUlid();
 
     String processString(String value) {
       var result = value;
 
-      // Replace $timestamp
+      // Replace built-in placeholders
       result = result.replaceAll(r'$timestamp', timestamp);
+      result = result.replaceAll(r'$uuid', uuid);
+      result = result.replaceAll(r'$ulid', ulid);
+
+      // Replace custom placeholders
+      for (final entry in customPlaceholders.entries) {
+        result = result.replaceAll('\$${entry.key}', entry.value());
+      }
 
       // Replace $1, $2, $3, etc.
       for (var i = 0; i < wildcardValues.length; i++) {
@@ -230,5 +249,29 @@ class MayrFakeInterceptor extends Interceptor {
     }
 
     return json.map((key, value) => MapEntry(key, processValue(value)));
+  }
+
+  /// Generates a ULID (Universally Unique Lexicographically Sortable Identifier)
+  /// Format: 26 characters (10 timestamp + 16 random)
+  String _generateUlid() {
+    const alphabet = '0123456789ABCDEFGHJKMNPQRSTVWXYZ';
+    final timestamp = DateTime.now().millisecondsSinceEpoch;
+    final random = Random();
+    
+    // Encode timestamp (48 bits / 10 characters)
+    var timestampPart = '';
+    var time = timestamp;
+    for (var i = 0; i < 10; i++) {
+      timestampPart = alphabet[time % 32] + timestampPart;
+      time = time ~/ 32;
+    }
+    
+    // Generate random part (80 bits / 16 characters)
+    var randomPart = '';
+    for (var i = 0; i < 16; i++) {
+      randomPart += alphabet[random.nextInt(32)];
+    }
+    
+    return timestampPart + randomPart;
   }
 }

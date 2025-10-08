@@ -19,7 +19,7 @@ void main() {
         delay: Duration.zero,
       );
 
-      final response = await dio.get('https://example.com/api/test_endpoint');
+      final response = await dio.get('https://example.com/test_endpoint');
 
       expect(response.statusCode, 200);
       expect(response.data['data']['message'], 'Test successful');
@@ -33,7 +33,7 @@ void main() {
       );
 
       try {
-        await dio.get('https://example.com/api/nonexistent');
+        await dio.get('https://example.com/nonexistent');
         fail('Should have thrown an error');
       } on DioException catch (e) {
         expect(e.response?.statusCode, 404);
@@ -54,11 +54,11 @@ void main() {
       );
 
       try {
-        await dio.get('https://example.com/api/nonexistent');
+        await dio.get('https://example.com/nonexistent');
         fail('Should have thrown an error');
       } on DioException catch (e) {
         expect(e.response?.statusCode, 404);
-        expect(e.response?.data['data']['custom'], 'error');
+        expect(e.response?.data['custom'], 'error');
       }
     });
 
@@ -70,7 +70,7 @@ void main() {
       );
 
       final response = await dio.get(
-        'https://example.com/api/dynamic/123/data',
+        'https://example.com/dynamic/123/data',
       );
 
       expect(response.statusCode, 200);
@@ -90,7 +90,7 @@ void main() {
       // Actually, let's create the scenario properly in assets
       try {
         final response = await dio.get(
-          'https://example.com/api/test_endpoint/empty',
+          'https://example.com/test_endpoint/empty',
         );
         // This would fail to find the file, but if we had empty.json as a method file:
         // expect(response.statusCode, 204);
@@ -109,7 +109,7 @@ void main() {
 
       // When disabled, the request should proceed normally (and fail)
       try {
-        await dio.get('https://example.com/api/test_endpoint');
+        await dio.get('https://example.com/test_endpoint');
         // If this succeeds, the interceptor was disabled correctly
         // and tried to make a real request
       } catch (e) {
@@ -126,7 +126,7 @@ void main() {
       );
 
       final stopwatch = Stopwatch()..start();
-      await dio.get('https://example.com/api/test_endpoint');
+      await dio.get('https://example.com/test_endpoint');
       stopwatch.stop();
 
       expect(stopwatch.elapsedMilliseconds, greaterThanOrEqualTo(100));
@@ -141,13 +141,13 @@ void main() {
 
       // GET
       final getResponse = await dio.get(
-        'https://example.com/api/test_endpoint',
+        'https://example.com/test_endpoint',
       );
       expect(getResponse.statusCode, 200);
 
       // Other methods will return 404 since we don't have post.json, etc.
       try {
-        await dio.post('https://example.com/api/test_endpoint');
+        await dio.post('https://example.com/test_endpoint');
       } on DioException catch (e) {
         expect(e.response?.statusCode, 404);
       }
@@ -163,9 +163,66 @@ void main() {
       );
 
       final response = await dio.get(
-        'https://example.com/api/dynamic/user123/data',
+        'https://example.com/dynamic/user123/data',
       );
       expect(response.statusCode, 200);
     });
+
+    test('supports built-in placeholders (timestamp, uuid, ulid)', () async {
+      await MayrFakeApi.init(
+        basePath: 'test/assets/api',
+        attachTo: dio,
+        delay: Duration.zero,
+      );
+
+      final response = await dio.get('https://example.com/placeholders');
+
+      expect(response.statusCode, 200);
+      expect(response.data['data']['timestamp'], isNotEmpty);
+      expect(response.data['data']['uuid'], isNotEmpty);
+      expect(response.data['data']['ulid'], isNotEmpty);
+      
+      // Validate UUID format (8-4-4-4-12)
+      final uuidPattern = RegExp(
+        r'^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$',
+      );
+      expect(uuidPattern.hasMatch(response.data['data']['uuid']), isTrue);
+      
+      // Validate ULID format (26 characters)
+      expect(response.data['data']['ulid'].length, 26);
+    });
+
+    test('supports custom placeholders', () async {
+      await MayrFakeApi.init(
+        basePath: 'test/assets/api',
+        attachTo: dio,
+        delay: Duration.zero,
+        customPlaceholders: {
+          'customValue': () => 'MyCustomValue',
+        },
+      );
+
+      final response = await dio.get('https://example.com/placeholders');
+
+      expect(response.statusCode, 200);
+      expect(response.data['data']['custom'], 'MyCustomValue');
+    });
+
+    test('custom placeholders generate new values on each request', () async {
+      var counter = 0;
+      await MayrFakeApi.init(
+        basePath: 'test/assets/api',
+        attachTo: dio,
+        delay: Duration.zero,
+        customPlaceholders: {
+          'customValue': () => 'Value${++counter}',
+        },
+      );
+
+      final response1 = await dio.get('https://example.com/placeholders');
+      final response2 = await dio.get('https://example.com/placeholders');
+
+      expect(response1.data['data']['custom'], 'Value1');
+      expect(response2.data['data']['custom'], 'Value2');
+    });
   });
-}

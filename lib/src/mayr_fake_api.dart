@@ -13,18 +13,21 @@ class MayrFakeApi {
   /// [delay] - Delay to simulate network latency (default: 500ms)
   /// [enabled] - Whether the fake API is enabled (default: true)
   /// [resolveNotFound] - Custom resolver for not found endpoints
+  /// [customPlaceholders] - Map of custom placeholder names to resolver functions
   static Future<void> init({
     required String basePath,
     required Dio attachTo,
     Duration delay = const Duration(milliseconds: 500),
     bool enabled = true,
     MayrFakeResponse Function(String path, String method)? resolveNotFound,
+    Map<String, String Function()>? customPlaceholders,
   }) async {
     _interceptor = MayrFakeInterceptor(
       basePath: basePath,
       delay: delay,
       enabled: enabled,
       resolveNotFound: resolveNotFound,
+      customPlaceholders: customPlaceholders,
     );
 
     attachTo.interceptors.add(_interceptor!);
@@ -40,6 +43,7 @@ class MayrFakeApi {
         delay: _interceptor!.delay,
         enabled: _interceptor!.enabled,
         resolveNotFound: resolver,
+        customPlaceholders: _interceptor!.customPlaceholders,
       );
     }
   }
@@ -52,6 +56,7 @@ class MayrFakeApi {
         delay: _interceptor!.delay,
         enabled: false,
         resolveNotFound: _interceptor!.resolveNotFound,
+        customPlaceholders: _interceptor!.customPlaceholders,
       );
     }
   }
@@ -64,6 +69,7 @@ class MayrFakeApi {
         delay: _interceptor!.delay,
         enabled: true,
         resolveNotFound: _interceptor!.resolveNotFound,
+        customPlaceholders: _interceptor!.customPlaceholders,
       );
     }
   }
