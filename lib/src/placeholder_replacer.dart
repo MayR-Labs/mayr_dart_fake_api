@@ -77,7 +77,7 @@ class PlaceholderReplacer {
       result = result.replaceAll(r'$city', _faker.address.city());
       result = result.replaceAll(r'$state', _faker.address.state());
       result = result.replaceAll(r'$address', _faker.address.streetAddress());
-      result = result.replaceAll(r'$timezone', _faker.address.timeZone());
+      result = result.replaceAll(r'$timezone', _generateTimeZone());
       
       // Business placeholders
       result = result.replaceAll(r'$currency', _faker.currency.code());
@@ -203,5 +203,39 @@ class PlaceholderReplacer {
     }
     
     return timestampPart + randomPart;
+  }
+
+  /// Generates a random timezone
+  static String _generateTimeZone() {
+    const timezones = [
+      'America/New_York',
+      'America/Chicago',
+      'America/Denver',
+      'America/Los_Angeles',
+      'America/Anchorage',
+      'Pacific/Honolulu',
+      'Europe/London',
+      'Europe/Paris',
+      'Europe/Berlin',
+      'Europe/Rome',
+      'Europe/Madrid',
+      'Europe/Amsterdam',
+      'Asia/Tokyo',
+      'Asia/Shanghai',
+      'Asia/Hong_Kong',
+      'Asia/Singapore',
+      'Asia/Dubai',
+      'Asia/Kolkata',
+      'Australia/Sydney',
+      'Australia/Melbourne',
+      'Australia/Brisbane',
+      'Africa/Cairo',
+      'Africa/Johannesburg',
+      'America/Sao_Paulo',
+      'America/Mexico_City',
+      'America/Toronto',
+      'Pacific/Auckland',
+    ];
+    return timezones[_random.nextInt(timezones.length)];
   }
 }
