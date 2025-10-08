@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart' as p;
 import 'mayr_fake_response.dart';
+import 'placeholder_replacer.dart';
 
 /// Interceptor for Dio that intercepts requests and returns fake responses
 class MayrFakeInterceptor extends Interceptor {
@@ -18,13 +19,18 @@ class MayrFakeInterceptor extends Interceptor {
   /// Custom resolver for not found endpoints
   final MayrFakeResponse Function(String path, String method)? resolveNotFound;
 
+  /// Custom placeholder resolvers
+  /// Map of placeholder names (without $) to resolver functions
+  final Map<String, String Function()> customPlaceholders;
+
   /// Creates a new interceptor
   MayrFakeInterceptor({
     required this.basePath,
     this.delay = const Duration(milliseconds: 500),
     this.enabled = true,
     this.resolveNotFound,
-  });
+    Map<String, String Function()>? customPlaceholders,
+  }) : customPlaceholders = customPlaceholders ?? {};
 
   @override
   void onRequest(
@@ -54,7 +60,7 @@ class MayrFakeInterceptor extends Interceptor {
       final method = options.method.toLowerCase();
 
       // Try to load the response
-      final response = await _loadResponse(requestPath, method);
+      final response = await _loadResponse(requestPath, method, options);
 
       if (response != null) {
         // Check if it's an error response
@@ -108,10 +114,11 @@ class MayrFakeInterceptor extends Interceptor {
   Future<MayrFakeResponse?> _loadResponse(
     String requestPath,
     String method,
+    RequestOptions options,
   ) async {
     // Try exact path first
     final exactPath = p.join(basePath, requestPath, '$method.json');
-    final exactResponse = await _tryLoadFile(exactPath, []);
+    final exactResponse = await _tryLoadFile(exactPath, [], options);
 
     if (exactResponse != null) {
       return exactResponse;
@@ -119,7 +126,7 @@ class MayrFakeInterceptor extends Interceptor {
 
     // Try with dynamic paths (wildcards)
     final parts = requestPath.split('/');
-    final wildcardResponse = await _tryWithWildcards(parts, method, 0, []);
+    final wildcardResponse = await _tryWithWildcards(parts, method, 0, [], options);
 
     if (wildcardResponse != null) {
       return wildcardResponse;
@@ -127,7 +134,7 @@ class MayrFakeInterceptor extends Interceptor {
 
     // Try error.json
     final errorPath = p.join(basePath, requestPath, 'error.json');
-    final errorResponse = await _tryLoadFile(errorPath, []);
+    final errorResponse = await _tryLoadFile(errorPath, [], options);
 
     if (errorResponse != null && errorResponse.statusCode >= 400) {
       return errorResponse;
@@ -142,10 +149,11 @@ class MayrFakeInterceptor extends Interceptor {
     String method,
     int index,
     List<String> wildcardValues,
+    RequestOptions options,
   ) async {
     if (index >= parts.length) {
       final path = p.join(basePath, parts.join('/'), '$method.json');
-      return await _tryLoadFile(path, wildcardValues);
+      return await _tryLoadFile(path, wildcardValues, options);
     }
 
     // Try with the original part first
@@ -154,6 +162,7 @@ class MayrFakeInterceptor extends Interceptor {
       method,
       index + 1,
       wildcardValues,
+      options,
     );
 
     if (originalResponse != null) {
@@ -166,7 +175,7 @@ class MayrFakeInterceptor extends Interceptor {
     final wildcardResponse = await _tryWithWildcards(parts, method, index + 1, [
       ...wildcardValues,
       originalPart,
-    ]);
+    ], options);
     parts[index] = originalPart; // Restore original
 
     return wildcardResponse;
@@ -176,6 +185,7 @@ class MayrFakeInterceptor extends Interceptor {
   Future<MayrFakeResponse?> _tryLoadFile(
     String path,
     List<String> wildcardValues,
+    RequestOptions options,
   ) async {
     try {
       final content = await rootBundle.loadString(path);
@@ -188,47 +198,17 @@ class MayrFakeInterceptor extends Interceptor {
       // Parse JSON
       final json = jsonDecode(content) as Map<String, dynamic>;
 
-      // Replace placeholders
-      final processedJson = _replacePlaceholders(json, wildcardValues);
+      // Replace placeholders using PlaceholderReplacer utility
+      final processedJson = PlaceholderReplacer.replacePlaceholders(
+        json,
+        wildcardValues,
+        options,
+        customPlaceholders,
+      );
 
       return MayrFakeResponse.fromJson(processedJson);
     } catch (e) {
       return null;
     }
-  }
-
-  /// Replaces placeholders in the response data
-  Map<String, dynamic> _replacePlaceholders(
-    Map<String, dynamic> json,
-    List<String> wildcardValues,
-  ) {
-    final timestamp = DateTime.now().toIso8601String();
-
-    String processString(String value) {
-      var result = value;
-
-      // Replace $timestamp
-      result = result.replaceAll(r'$timestamp', timestamp);
-
-      // Replace $1, $2, $3, etc.
-      for (var i = 0; i < wildcardValues.length; i++) {
-        result = result.replaceAll('\$${i + 1}', wildcardValues[i]);
-      }
-
-      return result;
-    }
-
-    dynamic processValue(dynamic value) {
-      if (value is String) {
-        return processString(value);
-      } else if (value is Map<String, dynamic>) {
-        return value.map((key, val) => MapEntry(key, processValue(val)));
-      } else if (value is List) {
-        return value.map(processValue).toList();
-      }
-      return value;
-    }
-
-    return json.map((key, value) => MapEntry(key, processValue(value)));
   }
 }

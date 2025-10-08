@@ -5,3 +5,4 @@ library mayr_fake_api;
 export 'src/mayr_fake_api.dart';
 export 'src/mayr_fake_response.dart';
 export 'src/mayr_fake_interceptor.dart';
+export 'src/placeholder_replacer.dart';

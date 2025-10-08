@@ -37,7 +37,11 @@ It’s designed to make your development flow **smoother**, **faster**, and **in
 * 🧭 Supports folder-structured routing (e.g. `/api/user/profile.json`).
 * ⚡ Supports multiple HTTP methods (`GET`, `POST`, `PUT`, `DELETE`, etc.) using method-specific JSON naming.
 * ❌ Built-in 404 simulation with customizable resolver.
-* 🪄 Dynamic data support (custom resolvers and generators).
+* 🪄 Dynamic data support with wildcards and placeholders.
+* 🎲 **50+ built-in placeholders** powered by Faker: UUIDs, user data, addresses, dates, random values, and more.
+* 🎯 **Parameterized placeholders**: `$randomInt(min,max)`, `$choose(a,b,c)`, `$image(width,height)`.
+* 🔧 **Custom placeholders**: Define your own dynamic value generators.
+* 🌐 **Request context**: Access `$method`, `$path`, `$query` in your responses.
 * 🧱 Lightweight — no dependencies on backend servers.
 * 🧍 Ideal for demos, offline-first apps, and rapid prototyping.
 * ⚙️ Enable or disable fake mode at runtime
@@ -237,21 +241,149 @@ instead of looking for a literal `/user/123/` path.
 
 ### Dynamic Placeholder Replacement
 
-Inside your dynamic JSON files, you can also reference the wildcard values using placeholders like:
+Inside your dynamic JSON files, you can reference wildcard values and use built-in placeholders for realistic mock data:
 
 ```json
 {
   "statusCode": 200,
   "data": {
+    "id": "$uuid",
     "userId": "$1",
-    "name": "Dynamic user",
-    "timestamp": "$timestamp"
+    "name": "$userFullName",
+    "email": "$userEmail",
+    "createdAt": "$timestamp"
   }
 }
 ```
 
-Where `$1` will be replaced with the first wildcard value (e.g. `123`)
-and `$timestamp` automatically resolves to the current ISO timestamp.
+#### Built-in Placeholders
+
+**Request Context:**
+- `$method` - HTTP method (GET, POST, etc.)
+- `$path` - Full request path
+- `$query` - Query parameters
+
+**Unique Identifiers:**
+- `$uuid` - UUID v4 (e.g., `550e8400-e29b-41d4-a716-446655440000`)
+- `$ulid` - ULID - Lexicographically sortable (e.g., `01HQZXVZQM7K9Q0W0R0W0R0W0R`)
+- `$id` - Random numeric ID (0-999999)
+- `$shortId` - Short alphanumeric ID (8 characters)
+- `$hash` - 40-character hexadecimal hash
+
+**Date & Time:**
+- `$timestamp` - ISO 8601 timestamp (e.g., `2025-01-15T10:30:45.123Z`)
+- `$datetime` - Same as $timestamp
+- `$now` - Same as $timestamp
+- `$date` - Current date (YYYY-MM-DD)
+- `$time` - Current time (HH:MM:SS)
+
+**User Data (via Faker):**
+- `$userId` - Random UUID for user ID
+- `$userEmail` - Random email address
+- `$username` - Random username
+- `$userFirstName` - Random first name
+- `$userLastName` - Random last name
+- `$userFullName` - Random full name
+- `$userAvatar` - Avatar image URL
+- `$userPhone` - Random phone number
+- `$userToken` - Random 64-character token
+
+**Location Data (via Faker):**
+- `$country` - Country name
+- `$countryCode` - Country code
+- `$city` - City name
+- `$state` - State name
+- `$address` - Street address
+- `$timezone` - Timezone
+- `$ipAddress` - Random IP address
+
+**Business Data (via Faker):**
+- `$currency` - Currency code (e.g., USD)
+- `$jobTitle` - Job title
+- `$companyName` - Company name
+- `$productName` - Product name
+- `$sku` - Product SKU
+
+**Random Data (via Faker):**
+- `$randomSentence` - Random lorem ipsum sentence
+- `$randomWord` - Random word
+- `$randomBool` - Random boolean (true/false)
+
+**Design/Visual:**
+- `$hexColor` - Hex color code (e.g., #FF5733)
+- `$color` - Color name
+- `$image(width,height)` - Placeholder image URL (e.g., `$image(300,200)`)
+
+**Other:**
+- `$version` - Random semantic version (e.g., 1.2.3)
+- `$statusCode` - HTTP status code (default: 200)
+
+**Parameterized Placeholders:**
+- `$randomInt(min,max)` - Random integer in range (e.g., `$randomInt(1,100)`)
+- `$randomFloat(min,max)` - Random float in range (e.g., `$randomFloat(0,1)`)
+- `$choose(a,b,c)` - Randomly picks one option (e.g., `$choose(red,green,blue)`)
+
+**Wildcard Values:**
+- `$1`, `$2`, `$3`, etc. - Replaced with wildcard values from URL path
+
+#### Custom Placeholders
+
+You can also define **custom placeholders**:
+
+```dart
+await MayrFakeApi.init(
+  basePath: 'assets/api',
+  attachTo: dio,
+  customPlaceholders: {
+    'sessionId': () => 'session-${DateTime.now().millisecondsSinceEpoch}',
+    'apiVersion': () => 'v2.0',
+    'environment': () => kDebugMode ? 'dev' : 'prod',
+  },
+);
+```
+
+Then in your JSON:
+
+```json
+{
+  "statusCode": 200,
+  "data": {
+    "sessionId": "$sessionId",
+    "apiVersion": "$apiVersion",
+    "environment": "$environment"
+  }
+}
+```
+
+#### Example Usage
+
+```json
+{
+  "statusCode": 200,
+  "data": {
+    "user": {
+      "id": "$uuid",
+      "name": "$userFullName",
+      "email": "$userEmail",
+      "avatar": "$userAvatar",
+      "phone": "$userPhone",
+      "address": {
+        "street": "$address",
+        "city": "$city",
+        "state": "$state",
+        "country": "$country",
+        "zip": "$randomInt(10000,99999)"
+      }
+    },
+    "metadata": {
+      "timestamp": "$timestamp",
+      "version": "$version",
+      "statusCode": "$statusCode",
+      "requestId": "$shortId"
+    }
+  }
+}
+```
 
 ---
 
@@ -308,6 +440,10 @@ will output something like:
   Placeholders `$1`, `$2`, `$3`, etc. will be replaced accordingly.
 * If no placeholder is found, the file is returned as-is.
 * Works seamlessly with all HTTP methods (`GET`, `POST`, etc.).
+* **50+ built-in placeholders** available for realistic mock data (powered by Faker)
+* Supports **parameterized placeholders** for dynamic ranges and choices
+* Custom placeholders can be defined during initialization to generate dynamic values
+* All placeholders are evaluated fresh on each request for realistic data
 
 ---
 

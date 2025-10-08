@@ -1,0 +1,66 @@
+{
+  "statusCode": 200,
+  "data": {
+    "request": {
+      "method": "$method",
+      "path": "$path",
+      "query": "$query"
+    },
+    "ids": {
+      "uuid": "$uuid",
+      "ulid": "$ulid",
+      "id": "$id",
+      "shortId": "$shortId",
+      "hash": "$hash"
+    },
+    "datetime": {
+      "timestamp": "$timestamp",
+      "date": "$date",
+      "time": "$time"
+    },
+    "user": {
+      "userId": "$userId",
+      "email": "$userEmail",
+      "username": "$username",
+      "firstName": "$userFirstName",
+      "lastName": "$userLastName",
+      "fullName": "$userFullName",
+      "avatar": "$userAvatar",
+      "phone": "$userPhone",
+      "token": "$userToken"
+    },
+    "location": {
+      "country": "$country",
+      "countryCode": "$countryCode",
+      "city": "$city",
+      "state": "$state",
+      "address": "$address",
+      "timezone": "$timezone",
+      "ipAddress": "$ipAddress"
+    },
+    "business": {
+      "currency": "$currency",
+      "jobTitle": "$jobTitle",
+      "companyName": "$companyName",
+      "productName": "$productName",
+      "sku": "$sku"
+    },
+    "random": {
+      "sentence": "$randomSentence",
+      "word": "$randomWord",
+      "bool": "$randomBool",
+      "int": "$randomInt(1,100)",
+      "float": "$randomFloat(0,10)",
+      "choice": "$choose(apple,banana,orange)"
+    },
+    "design": {
+      "hexColor": "$hexColor",
+      "color": "$color",
+      "image": "$image(300,200)"
+    },
+    "other": {
+      "version": "$version",
+      "statusCode": "$statusCode"
+    }
+  }
+}
