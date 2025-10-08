@@ -40,10 +40,7 @@ void main() {
     });
 
     test('converts response to JSON', () {
-      const response = MayrFakeResponse(
-        statusCode: 204,
-        data: null,
-      );
+      const response = MayrFakeResponse(statusCode: 204, data: null);
 
       final json = response.toJson();
 
@@ -60,10 +57,7 @@ void main() {
     });
 
     test('initializes with required parameters', () async {
-      await MayrFakeApi.init(
-        basePath: 'assets/api',
-        attachTo: dio,
-      );
+      await MayrFakeApi.init(basePath: 'assets/api', attachTo: dio);
 
       expect(dio.interceptors.length, greaterThan(0));
     });
@@ -106,9 +100,7 @@ void main() {
 
   group('MayrFakeInterceptor', () {
     test('creates interceptor with required parameters', () {
-      final interceptor = MayrFakeInterceptor(
-        basePath: 'assets/api',
-      );
+      final interceptor = MayrFakeInterceptor(basePath: 'assets/api');
 
       expect(interceptor.basePath, 'assets/api');
       expect(interceptor.delay, const Duration(milliseconds: 500));

@@ -69,7 +69,9 @@ void main() {
         delay: Duration.zero,
       );
 
-      final response = await dio.get('https://example.com/api/dynamic/123/data');
+      final response = await dio.get(
+        'https://example.com/api/dynamic/123/data',
+      );
 
       expect(response.statusCode, 200);
       expect(response.data['data']['id'], '123');
@@ -87,7 +89,9 @@ void main() {
       // Let's test with a POST to empty.json which doesn't exist
       // Actually, let's create the scenario properly in assets
       try {
-        final response = await dio.get('https://example.com/api/test_endpoint/empty');
+        final response = await dio.get(
+          'https://example.com/api/test_endpoint/empty',
+        );
         // This would fail to find the file, but if we had empty.json as a method file:
         // expect(response.statusCode, 204);
       } catch (e) {
@@ -136,7 +140,9 @@ void main() {
       );
 
       // GET
-      final getResponse = await dio.get('https://example.com/api/test_endpoint');
+      final getResponse = await dio.get(
+        'https://example.com/api/test_endpoint',
+      );
       expect(getResponse.statusCode, 200);
 
       // Other methods will return 404 since we don't have post.json, etc.
@@ -156,7 +162,9 @@ void main() {
         delay: Duration.zero,
       );
 
-      final response = await dio.get('https://example.com/api/dynamic/user123/data');
+      final response = await dio.get(
+        'https://example.com/api/dynamic/user123/data',
+      );
       expect(response.statusCode, 200);
     });
   });

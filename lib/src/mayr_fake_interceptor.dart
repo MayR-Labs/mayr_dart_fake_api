@@ -83,11 +83,9 @@ class MayrFakeInterceptor extends Interceptor {
       }
 
       // File not found, use custom resolver or default 404
-      final notFoundResponse = resolveNotFound?.call(requestPath, method) ??
-          const MayrFakeResponse(
-            statusCode: 404,
-            data: {'error': 'Not found'},
-          );
+      final notFoundResponse =
+          resolveNotFound?.call(requestPath, method) ??
+          const MayrFakeResponse(statusCode: 404, data: {'error': 'Not found'});
 
       return handler.reject(
         DioException(
@@ -165,12 +163,10 @@ class MayrFakeInterceptor extends Interceptor {
     // Try with wildcard
     final originalPart = parts[index];
     parts[index] = '-';
-    final wildcardResponse = await _tryWithWildcards(
-      parts,
-      method,
-      index + 1,
-      [...wildcardValues, originalPart],
-    );
+    final wildcardResponse = await _tryWithWildcards(parts, method, index + 1, [
+      ...wildcardValues,
+      originalPart,
+    ]);
     parts[index] = originalPart; // Restore original
 
     return wildcardResponse;

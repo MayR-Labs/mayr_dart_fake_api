@@ -7,10 +7,7 @@ class MayrFakeResponse {
   final dynamic data;
 
   /// Creates a fake API response
-  const MayrFakeResponse({
-    required this.statusCode,
-    this.data,
-  });
+  const MayrFakeResponse({required this.statusCode, this.data});
 
   /// Creates a response from JSON
   factory MayrFakeResponse.fromJson(Map<String, dynamic> json) {
@@ -22,9 +19,6 @@ class MayrFakeResponse {
 
   /// Converts response to JSON
   Map<String, dynamic> toJson() {
-    return {
-      'statusCode': statusCode,
-      'data': data,
-    };
+    return {'statusCode': statusCode, 'data': data};
   }
 }

@@ -86,7 +86,8 @@ class _HomePageState extends State<HomePage> {
       }
 
       setState(() {
-        _result = 'Success!\n'
+        _result =
+            'Success!\n'
             'Status: ${response.statusCode}\n'
             'Data: ${response.data}';
         _loading = false;
