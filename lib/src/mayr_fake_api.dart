@@ -1,0 +1,70 @@
+import 'package:dio/dio.dart';
+import 'mayr_fake_interceptor.dart';
+import 'mayr_fake_response.dart';
+
+/// Main class for initializing and configuring the fake API
+class MayrFakeApi {
+  static MayrFakeInterceptor? _interceptor;
+
+  /// Initializes the fake API and attaches it to a Dio instance
+  ///
+  /// [basePath] - Base path for fake API assets (e.g., 'assets/api')
+  /// [attachTo] - Dio instance to attach the interceptor to
+  /// [delay] - Delay to simulate network latency (default: 500ms)
+  /// [enabled] - Whether the fake API is enabled (default: true)
+  /// [resolveNotFound] - Custom resolver for not found endpoints
+  static Future<void> init({
+    required String basePath,
+    required Dio attachTo,
+    Duration delay = const Duration(milliseconds: 500),
+    bool enabled = true,
+    MayrFakeResponse Function(String path, String method)? resolveNotFound,
+  }) async {
+    _interceptor = MayrFakeInterceptor(
+      basePath: basePath,
+      delay: delay,
+      enabled: enabled,
+      resolveNotFound: resolveNotFound,
+    );
+
+    attachTo.interceptors.add(_interceptor!);
+  }
+
+  /// Sets a custom resolver for not found endpoints
+  static void resolveNotFound(
+    MayrFakeResponse Function(String path, String method) resolver,
+  ) {
+    if (_interceptor != null) {
+      _interceptor = MayrFakeInterceptor(
+        basePath: _interceptor!.basePath,
+        delay: _interceptor!.delay,
+        enabled: _interceptor!.enabled,
+        resolveNotFound: resolver,
+      );
+    }
+  }
+
+  /// Disables the fake API
+  static void disable() {
+    if (_interceptor != null) {
+      _interceptor = MayrFakeInterceptor(
+        basePath: _interceptor!.basePath,
+        delay: _interceptor!.delay,
+        enabled: false,
+        resolveNotFound: _interceptor!.resolveNotFound,
+      );
+    }
+  }
+
+  /// Enables the fake API
+  static void enable() {
+    if (_interceptor != null) {
+      _interceptor = MayrFakeInterceptor(
+        basePath: _interceptor!.basePath,
+        delay: _interceptor!.delay,
+        enabled: true,
+        resolveNotFound: _interceptor!.resolveNotFound,
+      );
+    }
+  }
+}
