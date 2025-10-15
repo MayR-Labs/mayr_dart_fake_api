@@ -1,10 +1,8 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_test/flutter_test.dart';
+import 'package:test/test.dart';
 import 'package:mayr_fake_api/mayr_fake_api.dart';
 
 void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
-
   group('V2.0.0 Flat Structure Tests', () {
     late Dio dio;
 
@@ -17,6 +15,7 @@ void main() {
         basePath: 'test/assets/api',
         attachTo: dio,
         delay: Duration.zero,
+        assetLoader: DartAssetLoader(),
         debug: false,
       );
 
@@ -31,6 +30,7 @@ void main() {
         basePath: 'test/assets/api',
         attachTo: dio,
         delay: Duration.zero,
+        assetLoader: DartAssetLoader(),
         debug: false,
       );
 
@@ -47,6 +47,7 @@ void main() {
         basePath: 'test/assets/api',
         attachTo: dio,
         delay: Duration.zero,
+        assetLoader: DartAssetLoader(),
         debug: false,
       );
 
@@ -63,6 +64,7 @@ void main() {
         basePath: 'test/assets/api',
         attachTo: dio,
         delay: Duration.zero,
+        assetLoader: DartAssetLoader(),
         debug: true,
       );
 
@@ -76,6 +78,7 @@ void main() {
         basePath: 'test/assets/api',
         attachTo: dio,
         delay: Duration.zero,
+        assetLoader: DartAssetLoader(),
         debug: false,
       );
 
@@ -91,6 +94,7 @@ void main() {
         basePath: 'test/assets/api',
         attachTo: dio,
         delay: Duration.zero,
+        assetLoader: DartAssetLoader(),
         debug: false,
       );
 
@@ -104,6 +108,7 @@ void main() {
         basePath: 'test/assets/api',
         attachTo: dio,
         delay: Duration.zero,
+        assetLoader: DartAssetLoader(),
         debug: false,
         customPlaceholders: {'customValue': () => 'MyCustomValue'},
       );
@@ -119,6 +124,7 @@ void main() {
         basePath: 'test/assets/api',
         attachTo: dio,
         delay: Duration.zero,
+        assetLoader: DartAssetLoader(),
         debug: false,
       );
 

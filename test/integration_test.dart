@@ -1,10 +1,9 @@
+import 'dart:io';
 import 'package:dio/dio.dart';
-import 'package:flutter_test/flutter_test.dart';
+import 'package:test/test.dart';
 import 'package:mayr_fake_api/mayr_fake_api.dart';
 
 void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
-
   group('MayrFakeApi Integration Tests', () {
     late Dio dio;
 
@@ -17,6 +16,8 @@ void main() {
         basePath: 'test/assets/api',
         attachTo: dio,
         delay: Duration.zero,
+        assetLoader: DartAssetLoader(),
+        assetLoader: DartAssetLoader(),
       );
 
       final response = await dio.get('https://example.com/test_endpoint');
@@ -30,6 +31,7 @@ void main() {
         basePath: 'test/assets/api',
         attachTo: dio,
         delay: Duration.zero,
+        assetLoader: DartAssetLoader(),
       );
 
       try {
@@ -45,6 +47,7 @@ void main() {
         basePath: 'test/assets/api',
         attachTo: dio,
         delay: Duration.zero,
+        assetLoader: DartAssetLoader(),
         resolveNotFound: (path, method) {
           return const MayrFakeResponse(
             statusCode: 404,
@@ -67,6 +70,7 @@ void main() {
         basePath: 'test/assets/api',
         attachTo: dio,
         delay: Duration.zero,
+        assetLoader: DartAssetLoader(),
       );
 
       final response = await dio.get('https://example.com/dynamic/123/data');
@@ -81,6 +85,7 @@ void main() {
         basePath: 'test/assets/api',
         attachTo: dio,
         delay: Duration.zero,
+        assetLoader: DartAssetLoader(),
       );
 
       // Note: We need to use a different method since get.json exists
@@ -102,6 +107,7 @@ void main() {
         basePath: 'test/assets/api',
         attachTo: dio,
         delay: Duration.zero,
+        assetLoader: DartAssetLoader(),
         enabled: false,
       );
 
@@ -121,6 +127,7 @@ void main() {
         basePath: 'test/assets/api',
         attachTo: dio,
         delay: const Duration(milliseconds: 100),
+        assetLoader: DartAssetLoader(),
       );
 
       final stopwatch = Stopwatch()..start();
@@ -135,6 +142,7 @@ void main() {
         basePath: 'test/assets/api',
         attachTo: dio,
         delay: Duration.zero,
+        assetLoader: DartAssetLoader(),
       );
 
       // GET
@@ -156,6 +164,7 @@ void main() {
         basePath: 'test/assets/api',
         attachTo: dio,
         delay: Duration.zero,
+        assetLoader: DartAssetLoader(),
       );
 
       final response = await dio.get(
@@ -169,6 +178,7 @@ void main() {
         basePath: 'test/assets/api',
         attachTo: dio,
         delay: Duration.zero,
+        assetLoader: DartAssetLoader(),
       );
 
       final response = await dio.get('https://example.com/placeholders');
@@ -193,6 +203,7 @@ void main() {
         basePath: 'test/assets/api',
         attachTo: dio,
         delay: Duration.zero,
+        assetLoader: DartAssetLoader(),
         customPlaceholders: {'customValue': () => 'MyCustomValue'},
       );
 
@@ -208,6 +219,7 @@ void main() {
         basePath: 'test/assets/api',
         attachTo: dio,
         delay: Duration.zero,
+        assetLoader: DartAssetLoader(),
         customPlaceholders: {'customValue': () => 'Value${++counter}'},
       );
 
@@ -223,6 +235,7 @@ void main() {
         basePath: 'test/assets/api',
         attachTo: dio,
         delay: Duration.zero,
+        assetLoader: DartAssetLoader(),
       );
 
       final response = await dio.get(
@@ -308,6 +321,7 @@ void main() {
         basePath: 'test/assets/api',
         attachTo: dio,
         delay: Duration.zero,
+        assetLoader: DartAssetLoader(),
       );
 
       final response = await dio.get(
@@ -349,6 +363,7 @@ void main() {
         basePath: 'test/assets/api',
         attachTo: dio,
         delay: Duration.zero,
+        assetLoader: DartAssetLoader(),
       );
 
       final response = await dio.get('https://example.com/all_placeholders');

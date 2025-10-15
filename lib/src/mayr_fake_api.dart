@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print
 
 import 'package:dio/dio.dart';
+import 'asset_loader.dart';
 import 'mayr_fake_interceptor.dart';
 import 'mayr_fake_response.dart';
 
@@ -17,6 +18,7 @@ class MayrFakeApi {
   /// [debug] - Whether to enable debug logging (default: false)
   /// [resolveNotFound] - Custom resolver for not found endpoints
   /// [customPlaceholders] - Map of custom placeholder names to resolver functions
+  /// [assetLoader] - Custom asset loader (optional, defaults to DartAssetLoader for pure Dart or FlutterAssetLoader for Flutter)
   static Future<void> init({
     required String basePath,
     required Dio attachTo,
@@ -25,6 +27,7 @@ class MayrFakeApi {
     bool debug = false,
     MayrFakeResponse Function(String path, String method)? resolveNotFound,
     Map<String, String Function()>? customPlaceholders,
+    AssetLoader? assetLoader,
   }) async {
     _interceptor = MayrFakeInterceptor(
       basePath: basePath,
@@ -33,6 +36,7 @@ class MayrFakeApi {
       debug: debug,
       resolveNotFound: resolveNotFound,
       customPlaceholders: customPlaceholders,
+      assetLoader: assetLoader,
     );
 
     attachTo.interceptors.add(_interceptor!);
@@ -56,6 +60,7 @@ class MayrFakeApi {
         debug: _interceptor!.debug,
         resolveNotFound: resolver,
         customPlaceholders: _interceptor!.customPlaceholders,
+        assetLoader: _interceptor!.assetLoader,
       );
     }
   }
@@ -70,6 +75,7 @@ class MayrFakeApi {
         debug: _interceptor!.debug,
         resolveNotFound: _interceptor!.resolveNotFound,
         customPlaceholders: _interceptor!.customPlaceholders,
+        assetLoader: _interceptor!.assetLoader,
       );
     }
   }
@@ -84,6 +90,7 @@ class MayrFakeApi {
         debug: _interceptor!.debug,
         resolveNotFound: _interceptor!.resolveNotFound,
         customPlaceholders: _interceptor!.customPlaceholders,
+        assetLoader: _interceptor!.assetLoader,
       );
     }
   }
