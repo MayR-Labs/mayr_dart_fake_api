@@ -262,7 +262,7 @@ final response = await dio.get('https://example.com/api/user/123/profile');
 
 The package will automatically match and resolve:
 
-**V2.0:** `api/user.-.profile.get.json`  
+**V2.0:** `api/user.-.profile.get.json`
 **V1.x:** `api/user/-/profile/get.json`
 
 ---
@@ -568,12 +568,9 @@ If you encounter a bug, unexpected behaviour, or have feature requests:
 
 ### 🧑‍💻 Author
 
-**MayR Labs**
+[**MayR Labs**](https://mayrlabs.com) - [Github](https://github.com/MayR-Labs)
 
 Building the future, one line at a time...
-
-Crafting clean, reliable, and human-centric Flutter and Dart solutions.
-🌍 [mayrlabs.com](https://mayrlabs.com)
 
 ---
 
@@ -582,7 +579,7 @@ This package is licensed under the MIT License — which means you are free to u
 
 > See the [LICENSE](LICENSE) file for more details.
 
-MIT © 2025 [MayR Labs](https://github.com/mayrlabs)
+MIT © 2025 [MayR Labs](https://github.com/MayR-Labs)
 
 ---
 

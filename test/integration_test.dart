@@ -48,7 +48,7 @@ void main() {
         resolveNotFound: (path, method) {
           return const MayrFakeResponse(
             statusCode: 404,
-            data: {'custom': 'error'},
+            body: {'custom': 'error'},
           );
         },
       );
@@ -315,25 +315,31 @@ void main() {
       );
 
       expect(response.statusCode, 200);
-      
+
       // Check body field (v2.0)
       expect(response.data['body'], isNotNull);
-      expect(response.data['body']['message'], 'Response with headers and cookies');
-      
+      expect(
+        response.data['body']['message'],
+        'Response with headers and cookies',
+      );
+
       // Check data field still works (v1.x compatibility)
       expect(response.data['data'], isNotNull);
-      expect(response.data['data']['message'], 'Response with headers and cookies');
-      
+      expect(
+        response.data['data']['message'],
+        'Response with headers and cookies',
+      );
+
       // Check headers are included
       expect(response.data['headers'], isNotNull);
       expect(response.data['headers']['Content-Type'], 'application/json');
       expect(response.data['headers']['X-Custom-Header'], 'test-value');
-      
+
       // Check cookies are included
       expect(response.data['cookies'], isNotNull);
       expect(response.data['cookies']['session_id'], 'test123');
       expect(response.data['cookies']['user_token'], 'abc789');
-      
+
       // Check headers are set in response
       expect(response.headers.value('content-type'), isNotNull);
     });

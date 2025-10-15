@@ -51,7 +51,7 @@ Files are named using dots instead of nested directories:
 }
 ```
 
-**Rationale:** 
+**Rationale:**
 - `statusCode` = HTTP status code (e.g., 200, 404, 500)
 - `body` = actual HTTP response body (the data)
 - `headers` = optional response headers
@@ -116,7 +116,6 @@ Example output:
 - Repository transferred to **MayR-Labs** organization
 - All URLs updated to `https://github.com/MayR-Labs/mayr_flutter_fake_api`
 - LICENSE updated to reflect MayR Labs (https://mayrlabs.com)
-- Added company motto: "Building the future, one line at a time..."
 - Version bumped to 2.0.0
 
 ## Technical Implementation

@@ -72,7 +72,10 @@ void main() {
     });
 
     test('omits null headers and cookies from JSON', () {
-      const response = MayrFakeResponse(statusCode: 200, body: {'test': 'data'});
+      const response = MayrFakeResponse(
+        statusCode: 200,
+        body: {'test': 'data'},
+      );
 
       final json = response.toJson();
 

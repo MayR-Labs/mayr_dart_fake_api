@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
@@ -49,14 +51,18 @@ class MayrFakeInterceptor extends Interceptor {
     }
 
     if (debug) {
-      print('[MayrFakeApi] Intercepting request: ${options.method} ${options.uri}');
+      print(
+        '[MayrFakeApi] Intercepting request: ${options.method} ${options.uri}',
+      );
     }
 
     try {
       // Simulate delay
       if (delay.inMilliseconds > 0) {
         if (debug) {
-          print('[MayrFakeApi] Simulating network delay: ${delay.inMilliseconds}ms');
+          print(
+            '[MayrFakeApi] Simulating network delay: ${delay.inMilliseconds}ms',
+          );
         }
         await Future.delayed(delay);
       }
@@ -83,7 +89,9 @@ class MayrFakeInterceptor extends Interceptor {
 
       if (response != null) {
         if (debug) {
-          print('[MayrFakeApi] Found response with status code: ${response.statusCode}');
+          print(
+            '[MayrFakeApi] Found response with status code: ${response.statusCode}',
+          );
         }
 
         // Check if it's an error response
@@ -98,10 +106,12 @@ class MayrFakeInterceptor extends Interceptor {
                 requestOptions: options,
                 statusCode: response.statusCode,
                 data: response.body,
-                headers: response.headers != null 
-                    ? Headers.fromMap(response.headers!.map(
-                        (key, value) => MapEntry(key, [value.toString()]),
-                      ))
+                headers: response.headers != null
+                    ? Headers.fromMap(
+                        response.headers!.map(
+                          (key, value) => MapEntry(key, [value.toString()]),
+                        ),
+                      )
                     : Headers(),
               ),
               type: DioExceptionType.badResponse,
@@ -127,10 +137,12 @@ class MayrFakeInterceptor extends Interceptor {
               if (response.headers != null) 'headers': response.headers,
               if (response.cookies != null) 'cookies': response.cookies,
             },
-            headers: response.headers != null 
-                ? Headers.fromMap(response.headers!.map(
-                    (key, value) => MapEntry(key, [value.toString()]),
-                  ))
+            headers: response.headers != null
+                ? Headers.fromMap(
+                    response.headers!.map(
+                      (key, value) => MapEntry(key, [value.toString()]),
+                    ),
+                  )
                 : Headers(),
           ),
         );
@@ -307,10 +319,13 @@ class MayrFakeInterceptor extends Interceptor {
     // Try with wildcard
     final originalPart = parts[index];
     parts[index] = '-';
-    final wildcardResponse = await _tryFlatWithWildcards(parts, method, index + 1, [
-      ...wildcardValues,
-      originalPart,
-    ], options);
+    final wildcardResponse = await _tryFlatWithWildcards(
+      parts,
+      method,
+      index + 1,
+      [...wildcardValues, originalPart],
+      options,
+    );
     parts[index] = originalPart; // Restore original
 
     return wildcardResponse;

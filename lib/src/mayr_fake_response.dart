@@ -25,7 +25,7 @@ class MayrFakeResponse {
   factory MayrFakeResponse.fromJson(Map<String, dynamic> json) {
     // Support v2.0 format with 'body' or fallback to v1.x 'data' for backward compatibility
     final responseBody = json['body'] ?? json['data'];
-    
+
     return MayrFakeResponse(
       statusCode: json['statusCode'] as int? ?? 200,
       body: responseBody,
@@ -36,19 +36,16 @@ class MayrFakeResponse {
 
   /// Converts response to JSON
   Map<String, dynamic> toJson() {
-    final result = <String, dynamic>{
-      'statusCode': statusCode,
-      'body': body,
-    };
-    
+    final result = <String, dynamic>{'statusCode': statusCode, 'body': body};
+
     if (headers != null) {
       result['headers'] = headers;
     }
-    
+
     if (cookies != null) {
       result['cookies'] = cookies;
     }
-    
+
     return result;
   }
 

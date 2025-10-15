@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:dio/dio.dart';
 import 'mayr_fake_interceptor.dart';
 import 'mayr_fake_response.dart';
@@ -36,7 +38,9 @@ class MayrFakeApi {
     attachTo.interceptors.add(_interceptor!);
 
     if (debug) {
-      print('[MayrFakeApi] Initialized with basePath: $basePath, enabled: $enabled, delay: ${delay.inMilliseconds}ms');
+      print(
+        '[MayrFakeApi] Initialized with basePath: $basePath, enabled: $enabled, delay: ${delay.inMilliseconds}ms',
+      );
     }
   }
 
