@@ -40,8 +40,8 @@ class MayrFakeInterceptor extends Interceptor {
     this.resolveNotFound,
     Map<String, String Function()>? customPlaceholders,
     AssetLoader? assetLoader,
-  })  : customPlaceholders = customPlaceholders ?? {},
-        assetLoader = assetLoader ?? DartAssetLoader();
+  }) : customPlaceholders = customPlaceholders ?? {},
+       assetLoader = assetLoader ?? DartAssetLoader();
 
   @override
   void onRequest(

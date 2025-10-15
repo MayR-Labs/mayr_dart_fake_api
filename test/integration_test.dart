@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:test/test.dart';
 import 'package:mayr_fake_api/mayr_fake_api.dart';
@@ -16,7 +15,6 @@ void main() {
         basePath: 'test/assets/api',
         attachTo: dio,
         delay: Duration.zero,
-        assetLoader: DartAssetLoader(),
         assetLoader: DartAssetLoader(),
       );
 
