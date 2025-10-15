@@ -74,7 +74,39 @@ flutter:
 
 That's it! Just one line! 🎉
 
-#### Step 3: (Optional) Enable Debug Mode
+#### Step 3: Update JSON Structure (data → body)
+
+**Before (V1.x format):**
+```json
+{
+  "statusCode": 200,
+  "data": {
+    "id": 1,
+    "name": "John"
+  }
+}
+```
+
+**After (V2.0 format):**
+```json
+{
+  "statusCode": 200,
+  "body": {
+    "id": 1,
+    "name": "John"
+  },
+  "headers": {
+    "Content-Type": "application/json"
+  },
+  "cookies": {
+    "session_id": "abc123"
+  }
+}
+```
+
+**Note:** `headers` and `cookies` are optional. V1.x files using `data` still work for backward compatibility.
+
+#### Step 4: (Optional) Enable Debug Mode
 
 Update your initialization code to use the new debug parameter:
 
@@ -92,7 +124,7 @@ await MayrFakeApi.init(
 
 If you prefer to keep your existing structure, you don't need to change anything! V2.0.0 automatically falls back to the nested structure if flat files aren't found.
 
-Your v1.x code will continue to work without any modifications.
+Your v1.x code (including files using `data` instead of `body`) will continue to work without any modifications.
 
 ## Conversion Script
 

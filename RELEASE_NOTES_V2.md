@@ -29,7 +29,61 @@ Files are named using dots instead of nested directories:
 - `products/details/get.json` → `products.details.get.json`
 - `user/-/profile/get.json` → `user.-.profile.get.json`
 
-### 2. Debug Mode
+### 2. JSON Structure Update (data → body)
+
+**The Change:** Renamed `data` field to `body` for better clarity:
+
+**V1.x Format:**
+```json
+{
+  "statusCode": 200,
+  "data": { ... }
+}
+```
+
+**V2.0 Format:**
+```json
+{
+  "statusCode": 200,
+  "body": { ... },
+  "headers": { ... },  // Optional
+  "cookies": { ... }   // Optional
+}
+```
+
+**Rationale:** 
+- `statusCode` = HTTP status code (e.g., 200, 404, 500)
+- `body` = actual HTTP response body (the data)
+- `headers` = optional response headers
+- `cookies` = optional response cookies
+
+**Backward Compatibility:** Files using `data` still work via legacy getter.
+
+### 3. Headers and Cookies Support
+
+New optional fields in JSON responses:
+
+```json
+{
+  "statusCode": 200,
+  "body": {
+    "message": "Login successful",
+    "user": { ... }
+  },
+  "headers": {
+    "Content-Type": "application/json",
+    "X-Auth-Token": "Bearer abc123"
+  },
+  "cookies": {
+    "session_id": "sess_abc123",
+    "refresh_token": "refresh_xyz789"
+  }
+}
+```
+
+Both fields are optional and can be omitted if not needed.
+
+### 4. Debug Mode
 New `debug` parameter enables console logging to help troubleshoot issues:
 
 ```dart
@@ -58,10 +112,11 @@ Example output:
 [MayrFakeApi] Returning successful response
 ```
 
-### 3. Organizational Changes
+### 5. Organizational Changes
 - Repository transferred to **MayR-Labs** organization
 - All URLs updated to `https://github.com/MayR-Labs/mayr_flutter_fake_api`
-- LICENSE updated to reflect MayR Labs ownership
+- LICENSE updated to reflect MayR Labs (https://mayrlabs.com)
+- Added company motto: "Building the future, one line at a time..."
 - Version bumped to 2.0.0
 
 ## Technical Implementation
