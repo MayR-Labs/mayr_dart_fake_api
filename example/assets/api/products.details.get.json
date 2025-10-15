@@ -1,6 +1,6 @@
 {
   "statusCode": 200,
-  "data": {
+  "body": {
     "id": 1,
     "name": "Amazing Product",
     "description": "This is an amazing product with lots of features",

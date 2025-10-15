@@ -98,16 +98,32 @@ flutter:
 
 Each JSON file corresponds to a simulated endpoint.
 
-And the JSON structures should contain statusCode and data. Example
+**V2.0 JSON Structure:**
+
+The JSON files should contain `statusCode` (the HTTP status code) and `body` (the actual response body):
 
 ```json
 {
-    "statusCode": 201,
-    "data": {
-        // ... The data here
+    "statusCode": 200,
+    "body": {
+        // ... Your response data here
+    },
+    "headers": {
+        // Optional: Response headers
+        "Content-Type": "application/json",
+        "X-Custom-Header": "value"
+    },
+    "cookies": {
+        // Optional: Response cookies
+        "session_id": "abc123",
+        "user_token": "xyz789"
     }
 }
 ```
+
+**Note:** The `headers` and `cookies` fields are optional. If not provided, only the status code and body will be returned.
+
+**V1.x Compatibility:** Files using `data` instead of `body` are still supported for backward compatibility.
 
 ---
 
@@ -553,6 +569,8 @@ If you encounter a bug, unexpected behaviour, or have feature requests:
 ### 🧑‍💻 Author
 
 **MayR Labs**
+
+Building the future, one line at a time...
 
 Crafting clean, reliable, and human-centric Flutter and Dart solutions.
 🌍 [mayrlabs.com](https://mayrlabs.com)

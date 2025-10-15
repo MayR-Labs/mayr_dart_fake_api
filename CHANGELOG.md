@@ -7,6 +7,11 @@
   - Simplifies asset management - only need to add `assets/api/` once in `pubspec.yaml`
   - No more multiple directory listings required
   - Backwards compatible with v1.x nested structure for seamless migration
+  
+- **JSON Structure Update**: Changed from `data` to `body` for clarity
+  - `body` represents the actual HTTP response body
+  - `statusCode` represents the HTTP status code
+  - **V1.x Compatibility**: Files using `data` are still supported for backward compatibility
 
 ### ✨ New Features
 - **Debug Mode**: Added `debug` parameter to `MayrFakeApi.init()` for console logging
@@ -14,9 +19,15 @@
   - Helps developers debug API simulation issues
   - Example: `await MayrFakeApi.init(debug: true, ...)`
 
+- **Headers and Cookies Support**: Added optional `headers` and `cookies` fields to JSON responses
+  - Simulate response headers (e.g., `Content-Type`, custom headers)
+  - Simulate response cookies (e.g., `session_id`, `refresh_token`)
+  - Both fields are optional and can be omitted if not needed
+  
 ### 🏢 Organizational Changes
 - Repository transferred to **MayR-Labs** organization
-- Updated LICENSE to reflect MayR Labs ownership
+- Updated LICENSE to reflect MayR Labs (https://mayrlabs.com)
+- Added company motto: "Building the future, one line at a time..."
 - Updated all URLs to `https://github.com/MayR-Labs/mayr_flutter_fake_api`
 
 ### 📦 Migration Guide from v1.x to v2.0
@@ -27,7 +38,17 @@
    - `assets/api/products/details/get.json` → `assets/api/products.details.get.json`
    - `assets/api/user/-/profile/get.json` → `assets/api/user.-.profile.get.json`
 
-2. Update your `pubspec.yaml`:
+2. Update JSON structure from `data` to `body`:
+   ```json
+   {
+     "statusCode": 200,
+     "body": { ... },
+     "headers": { ... },  // Optional
+     "cookies": { ... }   // Optional
+   }
+   ```
+
+3. Update your `pubspec.yaml`:
    ```yaml
    flutter:
      assets:
@@ -36,6 +57,7 @@
 
 **Option 2: Keep Nested Structure**
 - No changes required! V2.0 maintains full backwards compatibility with v1.x nested structure
+- Files using `data` instead of `body` continue to work
 - The package automatically tries flat structure first, then falls back to nested structure
 
 ### 🔧 Technical Changes

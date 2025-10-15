@@ -19,7 +19,7 @@ void main() async {
     resolveNotFound: (path, method) {
       return MayrFakeResponse(
         statusCode: 404,
-        data: {
+        body: {
           'error': 'No fake endpoint found for $method $path',
           'message': 'Please create the corresponding JSON file',
         },

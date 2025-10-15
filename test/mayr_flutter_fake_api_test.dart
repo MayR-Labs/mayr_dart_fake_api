@@ -9,14 +9,31 @@ void main() {
     test('creates response with required parameters', () {
       const response = MayrFakeResponse(
         statusCode: 200,
-        data: {'key': 'value'},
+        body: {'key': 'value'},
       );
 
       expect(response.statusCode, 200);
-      expect(response.data, {'key': 'value'});
+      expect(response.body, {'key': 'value'});
+      expect(response.data, {'key': 'value'}); // Legacy getter
     });
 
-    test('creates response from JSON', () {
+    test('creates response from JSON with body (v2.0)', () {
+      final json = {
+        'statusCode': 201,
+        'body': {'id': 1, 'name': 'Test'},
+        'headers': {'Content-Type': 'application/json'},
+        'cookies': {'session': 'abc123'},
+      };
+
+      final response = MayrFakeResponse.fromJson(json);
+
+      expect(response.statusCode, 201);
+      expect(response.body, {'id': 1, 'name': 'Test'});
+      expect(response.headers, {'Content-Type': 'application/json'});
+      expect(response.cookies, {'session': 'abc123'});
+    });
+
+    test('creates response from JSON with data (v1.x compatibility)', () {
       final json = {
         'statusCode': 201,
         'data': {'id': 1, 'name': 'Test'},
@@ -25,27 +42,42 @@ void main() {
       final response = MayrFakeResponse.fromJson(json);
 
       expect(response.statusCode, 201);
-      expect(response.data, {'id': 1, 'name': 'Test'});
+      expect(response.body, {'id': 1, 'name': 'Test'});
+      expect(response.data, {'id': 1, 'name': 'Test'}); // Legacy getter
     });
 
     test('creates response from JSON with default statusCode', () {
       final json = {
-        'data': {'id': 1},
+        'body': {'id': 1},
       };
 
       final response = MayrFakeResponse.fromJson(json);
 
       expect(response.statusCode, 200);
-      expect(response.data, {'id': 1});
+      expect(response.body, {'id': 1});
     });
 
     test('converts response to JSON', () {
-      const response = MayrFakeResponse(statusCode: 204, data: null);
+      const response = MayrFakeResponse(
+        statusCode: 204,
+        body: null,
+        headers: {'X-Custom': 'value'},
+      );
 
       final json = response.toJson();
 
       expect(json['statusCode'], 204);
-      expect(json['data'], null);
+      expect(json['body'], null);
+      expect(json['headers'], {'X-Custom': 'value'});
+    });
+
+    test('omits null headers and cookies from JSON', () {
+      const response = MayrFakeResponse(statusCode: 200, body: {'test': 'data'});
+
+      final json = response.toJson();
+
+      expect(json.containsKey('headers'), false);
+      expect(json.containsKey('cookies'), false);
     });
   });
 
@@ -89,7 +121,7 @@ void main() {
         resolveNotFound: (path, method) {
           return const MayrFakeResponse(
             statusCode: 404,
-            data: {'error': 'Custom not found'},
+            body: {'error': 'Custom not found'},
           );
         },
       );
@@ -125,7 +157,7 @@ void main() {
         resolveNotFound: (path, method) {
           return const MayrFakeResponse(
             statusCode: 404,
-            data: {'error': 'Custom error'},
+            body: {'error': 'Custom error'},
           );
         },
       );

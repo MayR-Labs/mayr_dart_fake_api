@@ -1,6 +1,6 @@
 {
   "statusCode": 200,
-  "data": {
+  "body": {
     "message": "Test successful"
   }
 }

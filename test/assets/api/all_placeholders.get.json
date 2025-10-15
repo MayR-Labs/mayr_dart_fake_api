@@ -1,6 +1,6 @@
 {
   "statusCode": 200,
-  "data": {
+  "body": {
     "request": {
       "method": "$method",
       "path": "$path",

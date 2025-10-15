@@ -1,0 +1,14 @@
+{
+  "statusCode": 200,
+  "body": {
+    "message": "Response with headers and cookies"
+  },
+  "headers": {
+    "Content-Type": "application/json",
+    "X-Custom-Header": "test-value"
+  },
+  "cookies": {
+    "session_id": "test123",
+    "user_token": "abc789"
+  }
+}

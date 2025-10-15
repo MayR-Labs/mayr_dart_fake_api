@@ -1,6 +1,6 @@
 {
   "statusCode": 201,
-  "data": {
+  "body": {
     "message": "Profile updated successfully",
     "id": 1,
     "name": "John Doe Updated",

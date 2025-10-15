@@ -38,13 +38,21 @@ Create `assets/api/user.profile.get.json`:
 ```json
 {
   "statusCode": 200,
-  "data": {
+  "body": {
     "id": 1,
     "name": "John Doe",
     "email": "john.doe@example.com"
+  },
+  "headers": {
+    "Content-Type": "application/json"
+  },
+  "cookies": {
+    "session_id": "abc123"
   }
 }
 ```
+
+**Note:** `headers` and `cookies` are optional fields. You can omit them if not needed.
 
 **V1.x - Nested Structure (Still Supported):**
 
@@ -56,6 +64,8 @@ your_project/
         profile/
           get.json
 ```
+
+**V1.x Format:** Files using `"data"` instead of `"body"` are still supported.
 
 ### Step 2: Register Assets in pubspec.yaml
 
@@ -170,7 +180,7 @@ Example `post.json`:
 ```json
 {
   "statusCode": 201,
-  "data": {
+  "body": {
     "message": "Profile updated successfully"
   }
 }
@@ -200,7 +210,7 @@ And you can use the wildcard value in your JSON:
 ```json
 {
   "statusCode": 200,
-  "data": {
+  "body": {
     "userId": "$1",
     "name": "User $1"
   }
@@ -214,7 +224,7 @@ Create an `error.json` file:
 ```json
 {
   "statusCode": 500,
-  "data": {
+  "body": {
     "message": "Server error occurred"
   }
 }
@@ -272,7 +282,7 @@ await MayrFakeApi.init(
   resolveNotFound: (path, method) {
     return MayrFakeResponse(
       statusCode: 404,
-      data: {
+      body: {
         'error': 'Endpoint not found',
         'path': path,
         'method': method,
@@ -321,7 +331,7 @@ await MayrFakeApi.init(
 **Solution**: Check that:
 1. The HTTP method matches (GET → `user.profile.get.json` for v2.0 or `get.json` for v1.x)
 2. The path structure is correct (use dots for v2.0 or slashes for v1.x)
-3. The JSON file has proper format with `statusCode` and `data`
+3. The JSON file has proper format with `statusCode` and `body` (or `data` for v1.x compatibility)
 
 ---
 

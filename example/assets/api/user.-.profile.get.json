@@ -1,6 +1,6 @@
 {
   "statusCode": 200,
-  "data": {
+  "body": {
     "userId": "$1",
     "name": "Dynamic User",
     "email": "user$1@example.com",

@@ -1,6 +1,6 @@
 {
   "statusCode": 500,
-  "data": {
+  "body": {
     "code": 500,
     "message": "Internal server error",
     "details": "Something went wrong on the server"

@@ -97,7 +97,12 @@ class MayrFakeInterceptor extends Interceptor {
               response: Response(
                 requestOptions: options,
                 statusCode: response.statusCode,
-                data: response.data,
+                data: response.body,
+                headers: response.headers != null 
+                    ? Headers.fromMap(response.headers!.map(
+                        (key, value) => MapEntry(key, [value.toString()]),
+                      ))
+                    : Headers(),
               ),
               type: DioExceptionType.badResponse,
             ),
@@ -112,9 +117,21 @@ class MayrFakeInterceptor extends Interceptor {
           Response(
             requestOptions: options,
             statusCode: response.statusCode,
-            // Expose full JSON structure so callers can access
-            // response.data['data'] as in the integration tests
-            data: {'statusCode': response.statusCode, 'data': response.data},
+            // Expose full JSON structure for backward compatibility
+            // V2.0: response.data['body'] contains the actual response body
+            // V1.x: response.data['data'] still works via the legacy getter
+            data: {
+              'statusCode': response.statusCode,
+              'body': response.body,
+              'data': response.body, // Legacy support
+              if (response.headers != null) 'headers': response.headers,
+              if (response.cookies != null) 'cookies': response.cookies,
+            },
+            headers: response.headers != null 
+                ? Headers.fromMap(response.headers!.map(
+                    (key, value) => MapEntry(key, [value.toString()]),
+                  ))
+                : Headers(),
           ),
         );
       }
@@ -126,7 +143,7 @@ class MayrFakeInterceptor extends Interceptor {
       // File not found, use custom resolver or default 404
       final notFoundResponse =
           resolveNotFound?.call(requestPath, method) ??
-          const MayrFakeResponse(statusCode: 404, data: {'error': 'Not found'});
+          const MayrFakeResponse(statusCode: 404, body: {'error': 'Not found'});
 
       return handler.reject(
         DioException(
@@ -134,7 +151,7 @@ class MayrFakeInterceptor extends Interceptor {
           response: Response(
             requestOptions: options,
             statusCode: notFoundResponse.statusCode,
-            data: notFoundResponse.data,
+            data: notFoundResponse.body,
           ),
           type: DioExceptionType.badResponse,
         ),
