@@ -1,5 +1,5 @@
 ![License](https://img.shields.io/badge/license-MIT-blue.svg?label=Licence)
-![Platform](https://img.shields.io/badge/Platform-Flutter-blue.svg)
+![Platform](https://img.shields.io/badge/Platform-Dart-blue.svg)
 
 ![Pub Version](https://img.shields.io/pub/v/mayr_fake_api?style=plastic&label=Version)
 ![Pub.dev Score](https://img.shields.io/pub/points/mayr_fake_api?label=Score&style=plastic)
@@ -7,10 +7,10 @@
 ![Pub.dev Publisher](https://img.shields.io/pub/publisher/mayr_fake_api?label=Publisher&style=plastic)
 ![Downloads](https://img.shields.io/pub/dm/mayr_fake_api.svg?label=Downloads&style=plastic)
 
-![Build Status](https://img.shields.io/github/actions/workflow/status/MayR-Labs/mayr_flutter_fake_api/ci.yaml?label=Build)
-![Issues](https://img.shields.io/github/issues/MayR-Labs/mayr_flutter_fake_api.svg?label=Issues)
-![Last Commit](https://img.shields.io/github/last-commit/MayR-Labs/mayr_flutter_fake_api.svg?label=Latest%20Commit)
-![Contributors](https://img.shields.io/github/contributors/MayR-Labs/mayr_flutter_fake_api.svg?label=Contributors)
+![Build Status](https://img.shields.io/github/actions/workflow/status/MayR-Labs/mayr_dart_fake_api/ci.yaml?label=Build)
+![Issues](https://img.shields.io/github/issues/MayR-Labs/mayr_dart_fake_api.svg?label=Issues)
+![Last Commit](https://img.shields.io/github/last-commit/MayR-Labs/mayr_dart_fake_api.svg?label=Latest%20Commit)
+![Contributors](https://img.shields.io/github/contributors/MayR-Labs/mayr_dart_fake_api.svg?label=Contributors)
 
 
 # 🧪 mayr_fake_api
@@ -25,7 +25,7 @@ With **mayr_fake_api**, you can simulate real REST API calls using simple JSON f
 
 ## 🚀 Overview
 
-`mayr_fake_api` intercepts network requests (e.g. from **Dio** or **http**) and serves data from local JSON files in your Flutter app’s `assets/` directory.
+`mayr_fake_api` intercepts network requests (e.g. from **Dio** or **http**) and serves data from local JSON files. It works seamlessly with both pure Dart applications (loading files from the filesystem) and Flutter apps (loading from assets).
 
 It’s designed to make your development flow **smoother**, **faster**, and **independent** of backend delays.
 
@@ -149,10 +149,12 @@ The JSON files should contain `statusCode` (the HTTP status code) and `body` (th
 
 ## 🧱 Example Usage
 
-### 1. Simple setup
+### For Flutter Apps
 
 ```dart
-
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:dio/dio.dart';
 import 'package:mayr_fake_api/mayr_fake_api.dart';
 
@@ -167,15 +169,37 @@ void main() async {
     delay: Duration(milliseconds: 500),
     enabled: kDebugMode,
     debug: true,  // Enable debug logging (v2.0+)
-    // resolveNotFound: ...
-    //
+    assetLoader: FlutterAssetLoader(rootBundle),  // Use Flutter's asset loader
   );
 
   runApp(MyApp());
 }
 ```
 
-### 2. Make a request
+### For Pure Dart Apps
+
+```dart
+import 'package:dio/dio.dart';
+import 'package:mayr_fake_api/mayr_fake_api.dart';
+
+void main() async {
+  final dio = Dio();
+
+  await MayrFakeApi.init(
+    basePath: 'test/assets/api',  // Use filesystem path
+    attachTo: dio,
+    delay: Duration(milliseconds: 500),
+    debug: true,
+    // assetLoader defaults to DartAssetLoader() for pure Dart
+  );
+
+  // Make requests as usual
+  final response = await dio.get('https://example.com/api/user/profile');
+  print(response.data);
+}
+```
+
+### Make a request
 
 ```dart
 final response = await dio.get('https://example.com/api/user/profile');
@@ -537,6 +561,121 @@ void main() async {
 void elsewhere() async {
     final response = await dio.get('api/user');
 }
+```
+
+---
+
+## ❓ FAQ (Frequently Asked Questions)
+
+### Can this package be used with Retrofit?
+
+**Yes!** This package works seamlessly with [Retrofit](https://pub.dev/packages/retrofit). Since Retrofit uses Dio under the hood, you can simply attach the fake API interceptor to your Dio instance before passing it to Retrofit.
+
+Example:
+```dart
+import 'package:dio/dio.dart';
+import 'package:retrofit/retrofit.dart';
+import 'package:mayr_fake_api/mayr_fake_api.dart';
+
+// Your Retrofit API interface
+@RestApi(baseUrl: "https://api.example.com")
+abstract class ApiClient {
+  factory ApiClient(Dio dio, {String baseUrl}) = _ApiClient;
+  
+  @GET("/users")
+  Future<List<User>> getUsers();
+}
+
+void main() async {
+  // Create Dio instance
+  final dio = Dio();
+  
+  // Attach fake API interceptor
+  await MayrFakeApi.init(
+    basePath: 'assets/api',
+    attachTo: dio,
+    delay: Duration(milliseconds: 500),
+  );
+  
+  // Create Retrofit client with the Dio instance
+  final apiClient = ApiClient(dio);
+  
+  // Make requests - they will be intercepted by the fake API!
+  final users = await apiClient.getUsers();
+  print(users);
+}
+```
+
+### Can I use this package in production?
+
+While technically possible, **this package is designed for development and testing**, not production. You should disable it in production builds:
+
+```dart
+await MayrFakeApi.init(
+  basePath: 'assets/api',
+  attachTo: dio,
+  enabled: kDebugMode,  // Only enabled in debug mode
+);
+```
+
+### Does this work with the http package?
+
+Currently, this package is designed to work with **Dio** as it uses Dio's interceptor mechanism. Support for the `http` package could be added in future versions.
+
+### How do I handle authentication tokens?
+
+You can include authentication tokens in your fake JSON responses using the `headers` and `cookies` fields:
+
+```json
+{
+  "statusCode": 200,
+  "body": {
+    "user": "john@example.com"
+  },
+  "headers": {
+    "Authorization": "Bearer fake-token-123"
+  },
+  "cookies": {
+    "session_id": "abc123"
+  }
+}
+```
+
+### Can I use this for integration testing?
+
+**Absolutely!** This package is perfect for integration tests where you want to test your app's logic without making real network calls. Just initialize the fake API in your test setup and all Dio requests will be intercepted.
+
+### What's the difference between v1.x and v2.0 file structure?
+
+- **v2.0 (Recommended)**: Uses flat structure with dot notation (e.g., `user.profile.get.json`)
+- **v1.x (Still supported)**: Uses nested directories (e.g., `user/profile/get.json`)
+
+Both formats are supported for backward compatibility. v2.0 is simpler as you only need to register one directory in your `pubspec.yaml`.
+
+### How do I simulate slow network conditions?
+
+Use the `delay` parameter when initializing:
+
+```dart
+await MayrFakeApi.init(
+  basePath: 'assets/api',
+  attachTo: dio,
+  delay: Duration(seconds: 3),  // Simulate 3-second delay
+);
+```
+
+### Can I mix fake and real API calls?
+
+Yes! You can enable/disable the fake API at runtime:
+
+```dart
+// Disable fake API for specific calls
+MayrFakeApi.disable();
+await dio.get('https://real-api.com/endpoint');
+
+// Re-enable fake API
+MayrFakeApi.enable();
+await dio.get('https://fake-api.com/endpoint');
 ```
 
 ---
