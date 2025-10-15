@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:dio/dio.dart';
 import 'package:mayr_fake_api/mayr_fake_api.dart';
 
@@ -16,6 +17,7 @@ void main() async {
     delay: const Duration(milliseconds: 500),
     enabled: kDebugMode,
     debug: kDebugMode, // Enable debug logging in debug mode
+    assetLoader: FlutterAssetLoader(rootBundle),
     resolveNotFound: (path, method) {
       return MayrFakeResponse(
         statusCode: 404,

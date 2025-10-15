@@ -1,8 +1,8 @@
 # MayrFakeApi Example
 
-This is an example application demonstrating the use of the `mayr_fake_api` package.
+This example demonstrates the use of the `mayr_fake_api` package with Flutter.
 
-## Running the Example
+## Running the Flutter Example
 
 1. Make sure you have Flutter installed
 2. Navigate to the example directory:
@@ -17,6 +17,30 @@ This is an example application demonstrating the use of the `mayr_fake_api` pack
    ```bash
    flutter run
    ```
+
+## Pure Dart Usage
+
+While this example is a Flutter app, `mayr_fake_api` also works with pure Dart applications. For pure Dart usage:
+
+```dart
+import 'package:dio/dio.dart';
+import 'package:mayr_fake_api/mayr_fake_api.dart';
+
+void main() async {
+  final dio = Dio();
+
+  await MayrFakeApi.init(
+    basePath: 'test/assets/api',  // Filesystem path
+    attachTo: dio,
+    delay: Duration(milliseconds: 500),
+    debug: true,
+    // assetLoader defaults to DartAssetLoader() for pure Dart
+  );
+
+  final response = await dio.get('https://example.com/api/user/profile');
+  print(response.data);
+}
+```
 
 ## What This Example Demonstrates
 

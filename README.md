@@ -1,5 +1,5 @@
 ![License](https://img.shields.io/badge/license-MIT-blue.svg?label=Licence)
-![Platform](https://img.shields.io/badge/Platform-Flutter-blue.svg)
+![Platform](https://img.shields.io/badge/Platform-Dart-blue.svg)
 
 ![Pub Version](https://img.shields.io/pub/v/mayr_fake_api?style=plastic&label=Version)
 ![Pub.dev Score](https://img.shields.io/pub/points/mayr_fake_api?label=Score&style=plastic)
@@ -25,7 +25,7 @@ With **mayr_fake_api**, you can simulate real REST API calls using simple JSON f
 
 ## 🚀 Overview
 
-`mayr_fake_api` intercepts network requests (e.g. from **Dio** or **http**) and serves data from local JSON files in your Flutter app’s `assets/` directory.
+`mayr_fake_api` intercepts network requests (e.g. from **Dio** or **http**) and serves data from local JSON files. It works seamlessly with both pure Dart applications (loading files from the filesystem) and Flutter apps (loading from assets).
 
 It’s designed to make your development flow **smoother**, **faster**, and **independent** of backend delays.
 
@@ -149,10 +149,12 @@ The JSON files should contain `statusCode` (the HTTP status code) and `body` (th
 
 ## 🧱 Example Usage
 
-### 1. Simple setup
+### For Flutter Apps
 
 ```dart
-
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:dio/dio.dart';
 import 'package:mayr_fake_api/mayr_fake_api.dart';
 
@@ -167,15 +169,37 @@ void main() async {
     delay: Duration(milliseconds: 500),
     enabled: kDebugMode,
     debug: true,  // Enable debug logging (v2.0+)
-    // resolveNotFound: ...
-    //
+    assetLoader: FlutterAssetLoader(rootBundle),  // Use Flutter's asset loader
   );
 
   runApp(MyApp());
 }
 ```
 
-### 2. Make a request
+### For Pure Dart Apps
+
+```dart
+import 'package:dio/dio.dart';
+import 'package:mayr_fake_api/mayr_fake_api.dart';
+
+void main() async {
+  final dio = Dio();
+
+  await MayrFakeApi.init(
+    basePath: 'test/assets/api',  // Use filesystem path
+    attachTo: dio,
+    delay: Duration(milliseconds: 500),
+    debug: true,
+    // assetLoader defaults to DartAssetLoader() for pure Dart
+  );
+
+  // Make requests as usual
+  final response = await dio.get('https://example.com/api/user/profile');
+  print(response.data);
+}
+```
+
+### Make a request
 
 ```dart
 final response = await dio.get('https://example.com/api/user/profile');

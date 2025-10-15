@@ -15,7 +15,11 @@ dependencies:
 Then run:
 
 ```bash
+# For Flutter projects
 flutter pub get
+
+# For Dart projects
+dart pub get
 ```
 
 ## Basic Setup
@@ -69,13 +73,15 @@ your_project/
 
 ### Step 2: Register Assets in pubspec.yaml
 
-**V2.0 - Much Simpler!** Add just one directory:
+**For Flutter Apps - V2.0 - Much Simpler!** Add just one directory:
 
 ```yaml
 flutter:
   assets:
     - assets/api/
 ```
+
+**For Pure Dart Apps:** No asset registration needed! Just ensure your JSON files exist in the filesystem path you specify in the `basePath` parameter.
 
 **V1.x - Multiple Directories:**
 
@@ -89,11 +95,14 @@ flutter:
 
 ### Step 3: Initialize in Your App
 
+**For Flutter Apps:**
+
 In your `main.dart`:
 
 ```dart
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:dio/dio.dart';
 import 'package:mayr_fake_api/mayr_fake_api.dart';
 
@@ -110,9 +119,35 @@ void main() async {
     delay: Duration(milliseconds: 500),
     enabled: kDebugMode,  // Only in debug mode
     debug: true,  // Enable debug logging (v2.0+)
+    assetLoader: FlutterAssetLoader(rootBundle),
   );
 
   runApp(MyApp(dio: dio));
+}
+```
+
+**For Pure Dart Apps:**
+
+```dart
+import 'package:dio/dio.dart';
+import 'package:mayr_fake_api/mayr_fake_api.dart';
+
+void main() async {
+  // Create Dio instance
+  final dio = Dio();
+
+  // Initialize fake API
+  await MayrFakeApi.init(
+    basePath: 'test/assets/api',  // Filesystem path
+    attachTo: dio,
+    delay: Duration(milliseconds: 500),
+    debug: true,
+    // assetLoader defaults to DartAssetLoader()
+  );
+
+  // Your code here
+  final response = await dio.get('https://api.example.com/api/user/profile');
+  print('User: ${response.data}');
 }
 ```
 
