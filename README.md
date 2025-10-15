@@ -7,10 +7,10 @@
 ![Pub.dev Publisher](https://img.shields.io/pub/publisher/mayr_fake_api?label=Publisher&style=plastic)
 ![Downloads](https://img.shields.io/pub/dm/mayr_fake_api.svg?label=Downloads&style=plastic)
 
-![Build Status](https://img.shields.io/github/actions/workflow/status/YoungMayor/mayr_flutter_fake_api/ci.yaml?label=Build)
-![Issues](https://img.shields.io/github/issues/YoungMayor/mayr_flutter_fake_api.svg?label=Issues)
-![Last Commit](https://img.shields.io/github/last-commit/YoungMayor/mayr_flutter_fake_api.svg?label=Latest%20Commit)
-![Contributors](https://img.shields.io/github/contributors/YoungMayor/mayr_flutter_fake_api.svg?label=Contributors)
+![Build Status](https://img.shields.io/github/actions/workflow/status/MayR-Labs/mayr_flutter_fake_api/ci.yaml?label=Build)
+![Issues](https://img.shields.io/github/issues/MayR-Labs/mayr_flutter_fake_api.svg?label=Issues)
+![Last Commit](https://img.shields.io/github/last-commit/MayR-Labs/mayr_flutter_fake_api.svg?label=Latest%20Commit)
+![Contributors](https://img.shields.io/github/contributors/MayR-Labs/mayr_flutter_fake_api.svg?label=Contributors)
 
 
 # 🧪 mayr_fake_api
@@ -55,7 +55,7 @@ Add this to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  mayr_fake_api: ^1.0.0
+  mayr_fake_api: ^2.0.0
 ```
 
 Then import it:
@@ -68,19 +68,31 @@ import 'package:mayr_fake_api/mayr_fake_api.dart';
 
 ## 🧩 Directory Structure
 
-By default, your fake API data can live anywhere in your project, but the conventional layout is:
+**New in v2.0.0:** Flat JSON structure for simplified asset management!
+
+Instead of nested directories, use a flat structure with dot notation:
 
 ```
 assets/
   api/
-    user/
-      profile/
-        get.json
-        post.json
-        put.json
-        delete.json
-        error.json
+    user.profile.get.json
+    user.profile.post.json
+    user.profile.put.json
+    user.profile.delete.json
+    user.profile.error.json
+    products.get.json
+    products.details.get.json
 ```
+
+This means you only need to add **one directory** to your `pubspec.yaml`:
+
+```yaml
+flutter:
+  assets:
+    - assets/api/
+```
+
+**Backward compatibility:** The package still supports the v1.x nested directory structure for seamless migration.
 
 Each JSON file corresponds to a simulated endpoint.
 
@@ -100,10 +112,10 @@ And the JSON structures should contain statusCode and data. Example
 ## 💡 How It Works
 
 * When you make a **GET** request to `/api/user/profile`,
-  the package looks for `api/user/profile/get.json`.
+  the package looks for `api/user.profile.get.json` (v2.0) or `api/user/profile/get.json` (v1.x).
 
 * When you make a **POST** request to `/api/user/profile`,
-  it looks for `api/user/profile/post.json`.
+  it looks for `api/user.profile.post.json` (v2.0) or `api/user/profile/post.json` (v1.x).
 
 * You can use **any folder structure**, e.g.:
 
@@ -136,6 +148,7 @@ void main() async {
     attachTo: dio,
     delay: Duration(milliseconds: 500),
     enabled: kDebugMode,
+    debug: true,  // Enable debug logging (v2.0+)
     // resolveNotFound: ...
     //
   );
@@ -150,7 +163,7 @@ void main() async {
 final response = await dio.get('https://example.com/api/user/profile');
 ```
 
-This will attempt to load `api/user/profile/get.json`.
+This will attempt to load `api/user.profile.get.json` (v2.0) or fall back to `api/user/profile/get.json` (v1.x).
 
 ---
 
@@ -231,11 +244,8 @@ final response = await dio.get('https://example.com/api/user/123/profile');
 
 The package will automatically match and resolve:
 
-```
-api/user/-/profile/get.json
-```
-
-instead of looking for a literal `/user/123/` path.
+**V2.0:** `api/user.-.profile.get.json`  
+**V1.x:** `api/user/-/profile/get.json`
 
 ---
 
@@ -389,8 +399,12 @@ Then in your JSON:
 
 ### Example in Action
 
-Given this structure:
+**V2.0 Flat Structure:**
+```
+api/user.-.profile.get.json
+```
 
+**V1.x Nested Structure:**
 ```
 api/
   user/
@@ -436,7 +450,7 @@ will output something like:
 
 ### Notes
 
-* You can include **multiple wildcards**, e.g. `/api/user/-/posts/-/get.json`.
+* You can include **multiple wildcards**, e.g. `user.-.posts.-.get.json` (v2.0) or `/api/user/-/posts/-/get.json` (v1.x).
   Placeholders `$1`, `$2`, `$3`, etc. will be replaced accordingly.
 * If no placeholder is found, the file is returned as-is.
 * Works seamlessly with all HTTP methods (`GET`, `POST`, etc.).
@@ -456,6 +470,18 @@ the API returns a **204 No Content** response automatically.
 
 ## 🔌 Example Directory Recap
 
+**V2.0 Flat Structure (Recommended):**
+```
+api/
+  user.profile.get.json              -> returns profile data
+  user.profile.post.json             -> simulate POST update
+  user.profile.error.json            -> simulate error
+  products.get.json                  -> product listing
+  products.details.get.json          -> single product details
+  user.-.profile.get.json            -> dynamic user profile
+```
+
+**V1.x Nested Structure (Still Supported):**
 ```
 api/
   user/
@@ -484,6 +510,7 @@ void main() async {
     basePath: 'assets/api',
     attachTo: dio,
     delay: Duration(milliseconds: 500),
+    debug: true,  // Enable debug logging (v2.0+)
   );
 
   // rest of code
