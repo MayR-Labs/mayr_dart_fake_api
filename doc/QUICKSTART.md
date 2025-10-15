@@ -8,7 +8,7 @@ Add the package to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  mayr_fake_api: ^1.0.0
+  mayr_fake_api: ^2.0.0
   dio: ^5.0.0  # Required dependency
 ```
 
@@ -22,7 +22,39 @@ flutter pub get
 
 ### Step 1: Create Your Fake API Files
 
-Create a directory structure for your fake API responses:
+**V2.0 - Flat Structure (Recommended):**
+
+Create flat structure files using dot notation:
+
+```
+your_project/
+  assets/
+    api/
+      user.profile.get.json
+```
+
+Create `assets/api/user.profile.get.json`:
+
+```json
+{
+  "statusCode": 200,
+  "body": {
+    "id": 1,
+    "name": "John Doe",
+    "email": "john.doe@example.com"
+  },
+  "headers": {
+    "Content-Type": "application/json"
+  },
+  "cookies": {
+    "session_id": "abc123"
+  }
+}
+```
+
+**Note:** `headers` and `cookies` are optional fields. You can omit them if not needed.
+
+**V1.x - Nested Structure (Still Supported):**
 
 ```
 your_project/
@@ -33,22 +65,19 @@ your_project/
           get.json
 ```
 
-Create `assets/api/user/profile/get.json`:
-
-```json
-{
-  "statusCode": 200,
-  "data": {
-    "id": 1,
-    "name": "John Doe",
-    "email": "john.doe@example.com"
-  }
-}
-```
+**V1.x Format:** Files using `"data"` instead of `"body"` are still supported.
 
 ### Step 2: Register Assets in pubspec.yaml
 
-Add the assets to your `pubspec.yaml`:
+**V2.0 - Much Simpler!** Add just one directory:
+
+```yaml
+flutter:
+  assets:
+    - assets/api/
+```
+
+**V1.x - Multiple Directories:**
 
 ```yaml
 flutter:
@@ -80,6 +109,7 @@ void main() async {
     attachTo: dio,
     delay: Duration(milliseconds: 500),
     enabled: kDebugMode,  // Only in debug mode
+    debug: true,  // Enable debug logging (v2.0+)
   );
 
   runApp(MyApp(dio: dio));
@@ -126,7 +156,16 @@ That's it! The request to `https://api.example.com/api/user/profile` will be int
 
 ### Different HTTP Methods
 
-Create files for different HTTP methods:
+**V2.0 - Flat Files:**
+
+```
+assets/api/user.profile.get.json      # GET requests
+assets/api/user.profile.post.json     # POST requests
+assets/api/user.profile.put.json      # PUT requests
+assets/api/user.profile.delete.json   # DELETE requests
+```
+
+**V1.x - Nested Files:**
 
 ```
 assets/api/user/profile/
@@ -141,7 +180,7 @@ Example `post.json`:
 ```json
 {
   "statusCode": 201,
-  "data": {
+  "body": {
     "message": "Profile updated successfully"
   }
 }
@@ -149,8 +188,14 @@ Example `post.json`:
 
 ### Dynamic Routes
 
-Use `-` as a wildcard in your directory structure:
+Use `-` as a wildcard in your path:
 
+**V2.0 - Flat Structure:**
+```
+assets/api/user.-.profile.get.json
+```
+
+**V1.x - Nested Structure:**
 ```
 assets/api/user/-/profile/get.json
 ```
@@ -165,7 +210,7 @@ And you can use the wildcard value in your JSON:
 ```json
 {
   "statusCode": 200,
-  "data": {
+  "body": {
     "userId": "$1",
     "name": "User $1"
   }
@@ -179,7 +224,7 @@ Create an `error.json` file:
 ```json
 {
   "statusCode": 500,
-  "data": {
+  "body": {
     "message": "Server error occurred"
   }
 }
@@ -237,7 +282,7 @@ await MayrFakeApi.init(
   resolveNotFound: (path, method) {
     return MayrFakeResponse(
       statusCode: 404,
-      data: {
+      body: {
         'error': 'Endpoint not found',
         'path': path,
         'method': method,
@@ -265,7 +310,10 @@ await MayrFakeApi.init(
 
 **Problem**: Getting file not found errors
 
-**Solution**: Make sure your assets are properly registered in `pubspec.yaml`
+**Solution**: 
+- V2.0: Check that your flat files use dot notation (e.g., `user.profile.get.json`)
+- V1.x: Make sure your nested assets are properly registered in `pubspec.yaml`
+- Ensure the file exists in the correct location
 
 ---
 
@@ -281,10 +329,10 @@ await MayrFakeApi.init(
 **Problem**: Wrong response being returned
 
 **Solution**: Check that:
-1. The HTTP method matches (GET → `get.json`)
-2. The path structure is correct
-3. The JSON file has proper format with `statusCode` and `data`
+1. The HTTP method matches (GET → `user.profile.get.json` for v2.0 or `get.json` for v1.x)
+2. The path structure is correct (use dots for v2.0 or slashes for v1.x)
+3. The JSON file has proper format with `statusCode` and `body` (or `data` for v1.x compatibility)
 
 ---
 
-For more help, see the full [API Documentation](API.md) or check the [issues on GitHub](https://github.com/YoungMayor/mayr_dart_fake_api/issues).
+For more help, see the full [API Documentation](API.md) or check the [issues on GitHub](https://github.com/MayR-Labs/mayr_flutter_fake_api/issues).

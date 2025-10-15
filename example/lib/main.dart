@@ -15,10 +15,11 @@ void main() async {
     attachTo: dio,
     delay: const Duration(milliseconds: 500),
     enabled: kDebugMode,
+    debug: kDebugMode, // Enable debug logging in debug mode
     resolveNotFound: (path, method) {
       return MayrFakeResponse(
         statusCode: 404,
-        data: {
+        body: {
           'error': 'No fake endpoint found for $method $path',
           'message': 'Please create the corresponding JSON file',
         },

@@ -23,8 +23,3 @@ flutter:
   uses-material-design: true
   assets:
     - assets/api/
-    - assets/api/user/
-    - assets/api/user/profile/
-    - assets/api/user/-/profile/
-    - assets/api/products/
-    - assets/api/products/details/
