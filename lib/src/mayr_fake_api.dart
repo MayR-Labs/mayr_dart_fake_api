@@ -12,6 +12,7 @@ class MayrFakeApi {
   /// [attachTo] - Dio instance to attach the interceptor to
   /// [delay] - Delay to simulate network latency (default: 500ms)
   /// [enabled] - Whether the fake API is enabled (default: true)
+  /// [debug] - Whether to enable debug logging (default: false)
   /// [resolveNotFound] - Custom resolver for not found endpoints
   /// [customPlaceholders] - Map of custom placeholder names to resolver functions
   static Future<void> init({
@@ -19,6 +20,7 @@ class MayrFakeApi {
     required Dio attachTo,
     Duration delay = const Duration(milliseconds: 500),
     bool enabled = true,
+    bool debug = false,
     MayrFakeResponse Function(String path, String method)? resolveNotFound,
     Map<String, String Function()>? customPlaceholders,
   }) async {
@@ -26,11 +28,16 @@ class MayrFakeApi {
       basePath: basePath,
       delay: delay,
       enabled: enabled,
+      debug: debug,
       resolveNotFound: resolveNotFound,
       customPlaceholders: customPlaceholders,
     );
 
     attachTo.interceptors.add(_interceptor!);
+
+    if (debug) {
+      print('[MayrFakeApi] Initialized with basePath: $basePath, enabled: $enabled, delay: ${delay.inMilliseconds}ms');
+    }
   }
 
   /// Sets a custom resolver for not found endpoints
@@ -42,6 +49,7 @@ class MayrFakeApi {
         basePath: _interceptor!.basePath,
         delay: _interceptor!.delay,
         enabled: _interceptor!.enabled,
+        debug: _interceptor!.debug,
         resolveNotFound: resolver,
         customPlaceholders: _interceptor!.customPlaceholders,
       );
@@ -55,6 +63,7 @@ class MayrFakeApi {
         basePath: _interceptor!.basePath,
         delay: _interceptor!.delay,
         enabled: false,
+        debug: _interceptor!.debug,
         resolveNotFound: _interceptor!.resolveNotFound,
         customPlaceholders: _interceptor!.customPlaceholders,
       );
@@ -68,6 +77,7 @@ class MayrFakeApi {
         basePath: _interceptor!.basePath,
         delay: _interceptor!.delay,
         enabled: true,
+        debug: _interceptor!.debug,
         resolveNotFound: _interceptor!.resolveNotFound,
         customPlaceholders: _interceptor!.customPlaceholders,
       );
