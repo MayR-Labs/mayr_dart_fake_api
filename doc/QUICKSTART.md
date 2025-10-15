@@ -370,4 +370,4 @@ await MayrFakeApi.init(
 
 ---
 
-For more help, see the full [API Documentation](API.md) or check the [issues on GitHub](https://github.com/MayR-Labs/mayr_flutter_fake_api/issues).
+For more help, see the full [API Documentation](API.md) or check the [issues on GitHub](https://github.com/MayR-Labs/mayr_dart_fake_api/issues).

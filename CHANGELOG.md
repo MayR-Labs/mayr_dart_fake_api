@@ -28,7 +28,7 @@
 - Repository transferred to **MayR-Labs** organization
 - Updated LICENSE to reflect MayR Labs (https://mayrlabs.com)
 - Added company motto: "Building the future, one line at a time..."
-- Updated all URLs to `https://github.com/MayR-Labs/mayr_flutter_fake_api`
+- Updated all URLs to `https://github.com/MayR-Labs/mayr_dart_fake_api`
 
 ### 📦 Migration Guide from v1.x to v2.0
 

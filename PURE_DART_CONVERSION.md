@@ -127,7 +127,7 @@ void main() async {
 ### Test Changes
 - `test/integration_test.dart` (updated)
 - `test/flat_structure_test.dart` (updated)
-- `test/mayr_flutter_fake_api_test.dart` (updated)
+- `test/mayr_dart_fake_api_test.dart` (updated)
 - `test/assets/api/test_endpoint.empty.get.json` (new)
 
 ### Documentation Changes

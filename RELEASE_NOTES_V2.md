@@ -114,7 +114,7 @@ Example output:
 
 ### 5. Organizational Changes
 - Repository transferred to **MayR-Labs** organization
-- All URLs updated to `https://github.com/MayR-Labs/mayr_flutter_fake_api`
+- All URLs updated to `https://github.com/MayR-Labs/mayr_dart_fake_api`
 - LICENSE updated to reflect MayR Labs (https://mayrlabs.com)
 - Version bumped to 2.0.0
 

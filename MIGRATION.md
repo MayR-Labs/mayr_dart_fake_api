@@ -232,7 +232,7 @@ After migration, test your endpoints:
 
 - Check the [README](../README.md) for updated examples
 - See the [Quick Start Guide](doc/QUICKSTART.md) for setup instructions
-- Open an issue on [GitHub](https://github.com/MayR-Labs/mayr_flutter_fake_api/issues)
+- Open an issue on [GitHub](https://github.com/MayR-Labs/mayr_dart_fake_api/issues)
 
 ---
 
