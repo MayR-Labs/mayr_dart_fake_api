@@ -64,6 +64,8 @@ Then import it:
 import 'package:mayr_fake_api/mayr_fake_api.dart';
 ```
 
+> **⚠️ Migrating from v1.0.0?** See the [Migration Guide](MIGRATION_GUIDE.md) for breaking changes.
+
 ---
 
 ## 🧩 Directory Structure
