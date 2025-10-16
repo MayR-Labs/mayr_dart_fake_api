@@ -1,0 +1,16 @@
+{
+  "statusCode": 200,
+  "body": {
+    "id": 1,
+    "name": "Amazing Product",
+    "description": "This is an amazing product with lots of features",
+    "price": 99.99,
+    "images": [
+      "https://via.placeholder.com/400",
+      "https://via.placeholder.com/401"
+    ],
+    "inStock": true,
+    "rating": 4.5,
+    "reviews": 127
+  }
+}

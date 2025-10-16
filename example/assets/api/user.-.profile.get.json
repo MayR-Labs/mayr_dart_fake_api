@@ -1,0 +1,10 @@
+{
+  "statusCode": 200,
+  "body": {
+    "userId": "$1",
+    "name": "Dynamic User",
+    "email": "user$1@example.com",
+    "timestamp": "$timestamp",
+    "message": "This is a dynamic response for user $1"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "statusCode": 201,
+  "body": {
+    "id": "$uuid",
+    "message": "User created successfully",
+    "timestamp": "$timestamp"
+  }
+}

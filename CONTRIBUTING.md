@@ -144,7 +144,7 @@ mayr_fake_api/
 │       ├── mayr_fake_interceptor.dart  # Dio interceptor
 │       └── mayr_fake_response.dart # Response model
 ├── test/
-│   ├── mayr_flutter_fake_api_test.dart  # Unit tests
+│   ├── mayr_dart_fake_api_test.dart  # Unit tests
 │   ├── integration_test.dart       # Integration tests
 │   └── assets/                     # Test assets
 ├── example/                        # Example application
