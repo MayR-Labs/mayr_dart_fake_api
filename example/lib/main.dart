@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:dio/dio.dart';
 import 'package:mayr_fake_api/mayr_fake_api.dart';
 
@@ -15,10 +16,12 @@ void main() async {
     attachTo: dio,
     delay: const Duration(milliseconds: 500),
     enabled: kDebugMode,
+    debug: kDebugMode, // Enable debug logging in debug mode
+    assetLoader: FlutterAssetLoader(rootBundle),
     resolveNotFound: (path, method) {
       return MayrFakeResponse(
         statusCode: 404,
-        data: {
+        body: {
           'error': 'No fake endpoint found for $method $path',
           'message': 'Please create the corresponding JSON file',
         },
