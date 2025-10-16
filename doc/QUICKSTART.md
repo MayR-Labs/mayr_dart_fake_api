@@ -8,14 +8,14 @@ Add the package to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  mayr_fake_api: ^1.0.0
+  mayr_fake_api: ^1.1.0
   dio: ^5.0.0  # Required dependency
 ```
 
 Then run:
 
 ```bash
-flutter pub get
+dart pub get  # or flutter pub get for Flutter apps
 ```
 
 ## Basic Setup
@@ -78,6 +78,7 @@ void main() async {
   await MayrFakeApi.init(
     basePath: 'assets/api',
     attachTo: dio,
+    assetLoader: FlutterAssetLoader(), // For Flutter apps
     delay: Duration(milliseconds: 500),
     enabled: kDebugMode,  // Only in debug mode
   );
@@ -287,4 +288,4 @@ await MayrFakeApi.init(
 
 ---
 
-For more help, see the full [API Documentation](API.md) or check the [issues on GitHub](https://github.com/YoungMayor/mayr_dart_fake_api/issues).
+For more help, see the full [API Documentation](API.md) or check the [issues on GitHub](https://github.com/MayR-Labs/mayr_dart_fake_api/issues).

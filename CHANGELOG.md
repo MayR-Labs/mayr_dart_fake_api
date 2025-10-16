@@ -1,3 +1,40 @@
+## 1.1.0
+
+- 🎉 **Breaking Change**: Converted from Flutter package to pure Dart package
+- ✨ Now supports both Flutter and pure Dart applications
+- 🔧 Added `AssetLoader` abstraction for flexible asset loading
+- 📦 Added `FileAssetLoader` for pure Dart applications (file system based)
+- 📦 Added `FlutterAssetLoader` for Flutter applications (uses rootBundle)
+- 🏢 Package now owned by MayR Labs organization
+- 📝 Updated all repository URLs to MayR-Labs/mayr_dart_fake_api
+- 📄 Updated LICENSE to MayR Labs (https://mayrlabs.com)
+- 📚 Updated documentation to reflect Dart package usage
+- 🎯 Flutter is now an optional dependency (only needed for FlutterAssetLoader)
+
+### Migration Guide
+
+For Flutter apps, update your initialization to explicitly use FlutterAssetLoader:
+
+```dart
+import 'package:mayr_fake_api/mayr_fake_api.dart';
+
+await MayrFakeApi.init(
+  basePath: 'assets/api',
+  attachTo: dio,
+  assetLoader: FlutterAssetLoader(), // Add this line
+);
+```
+
+For pure Dart apps, the default FileAssetLoader works automatically:
+
+```dart
+await MayrFakeApi.init(
+  basePath: 'path/to/api/files',
+  attachTo: dio,
+  // FileAssetLoader is used by default
+);
+```
+
 ## 1.0.0
 
 - 🎉 Initial stable release

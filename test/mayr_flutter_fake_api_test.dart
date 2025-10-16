@@ -57,7 +57,11 @@ void main() {
     });
 
     test('initializes with required parameters', () async {
-      await MayrFakeApi.init(basePath: 'assets/api', attachTo: dio);
+      await MayrFakeApi.init(
+        basePath: 'assets/api',
+        attachTo: dio,
+        assetLoader: FlutterAssetLoader(),
+      );
 
       expect(dio.interceptors.length, greaterThan(0));
     });
@@ -66,6 +70,7 @@ void main() {
       await MayrFakeApi.init(
         basePath: 'assets/api',
         attachTo: dio,
+        assetLoader: FlutterAssetLoader(),
         delay: const Duration(milliseconds: 100),
       );
 
@@ -76,6 +81,7 @@ void main() {
       await MayrFakeApi.init(
         basePath: 'assets/api',
         attachTo: dio,
+        assetLoader: FlutterAssetLoader(),
         enabled: false,
       );
 
@@ -86,6 +92,7 @@ void main() {
       await MayrFakeApi.init(
         basePath: 'assets/api',
         attachTo: dio,
+        assetLoader: FlutterAssetLoader(),
         resolveNotFound: (path, method) {
           return const MayrFakeResponse(
             statusCode: 404,
@@ -100,7 +107,10 @@ void main() {
 
   group('MayrFakeInterceptor', () {
     test('creates interceptor with required parameters', () {
-      final interceptor = MayrFakeInterceptor(basePath: 'assets/api');
+      final interceptor = MayrFakeInterceptor(
+        basePath: 'assets/api',
+        assetLoader: FlutterAssetLoader(),
+      );
 
       expect(interceptor.basePath, 'assets/api');
       expect(interceptor.delay, const Duration(milliseconds: 500));
@@ -110,6 +120,7 @@ void main() {
     test('creates interceptor with custom parameters', () {
       final interceptor = MayrFakeInterceptor(
         basePath: 'test/assets/api',
+        assetLoader: FlutterAssetLoader(),
         delay: const Duration(milliseconds: 100),
         enabled: false,
       );
@@ -122,6 +133,7 @@ void main() {
     test('creates interceptor with custom not found resolver', () {
       final interceptor = MayrFakeInterceptor(
         basePath: 'assets/api',
+        assetLoader: FlutterAssetLoader(),
         resolveNotFound: (path, method) {
           return const MayrFakeResponse(
             statusCode: 404,

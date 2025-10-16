@@ -13,6 +13,7 @@ void main() async {
   await MayrFakeApi.init(
     basePath: 'assets/api',
     attachTo: dio,
+    assetLoader: FlutterAssetLoader(), // Explicitly use Flutter's asset loader
     delay: const Duration(milliseconds: 500),
     enabled: kDebugMode,
     resolveNotFound: (path, method) {
