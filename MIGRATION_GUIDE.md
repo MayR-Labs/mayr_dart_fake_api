@@ -30,12 +30,13 @@ await MayrFakeApi.init(
 
 **After (v1.1.0):**
 ```dart
+import 'package:flutter/services.dart';
 import 'package:mayr_fake_api/mayr_fake_api.dart';
 
 await MayrFakeApi.init(
   basePath: 'assets/api',
   attachTo: dio,
-  assetLoader: FlutterAssetLoader(), // Add this line
+  assetLoader: FlutterAssetLoader(rootBundle), // Pass rootBundle from Flutter
 );
 ```
 

@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter/services.dart';
 import 'package:mayr_fake_api/mayr_fake_api.dart';
 
 void main() {
@@ -16,7 +17,7 @@ void main() {
       await MayrFakeApi.init(
         basePath: 'test/assets/api',
         attachTo: dio,
-        assetLoader: FlutterAssetLoader(),
+        assetLoader: FlutterAssetLoader(rootBundle),
         delay: Duration.zero,
       );
 
@@ -30,7 +31,7 @@ void main() {
       await MayrFakeApi.init(
         basePath: 'test/assets/api',
         attachTo: dio,
-        assetLoader: FlutterAssetLoader(),
+        assetLoader: FlutterAssetLoader(rootBundle),
         delay: Duration.zero,
       );
 
@@ -46,7 +47,7 @@ void main() {
       await MayrFakeApi.init(
         basePath: 'test/assets/api',
         attachTo: dio,
-        assetLoader: FlutterAssetLoader(),
+        assetLoader: FlutterAssetLoader(rootBundle),
         delay: Duration.zero,
         resolveNotFound: (path, method) {
           return const MayrFakeResponse(
@@ -69,7 +70,7 @@ void main() {
       await MayrFakeApi.init(
         basePath: 'test/assets/api',
         attachTo: dio,
-        assetLoader: FlutterAssetLoader(),
+        assetLoader: FlutterAssetLoader(rootBundle),
         delay: Duration.zero,
       );
 
@@ -84,7 +85,7 @@ void main() {
       await MayrFakeApi.init(
         basePath: 'test/assets/api',
         attachTo: dio,
-        assetLoader: FlutterAssetLoader(),
+        assetLoader: FlutterAssetLoader(rootBundle),
         delay: Duration.zero,
       );
 
@@ -106,7 +107,7 @@ void main() {
       await MayrFakeApi.init(
         basePath: 'test/assets/api',
         attachTo: dio,
-        assetLoader: FlutterAssetLoader(),
+        assetLoader: FlutterAssetLoader(rootBundle),
         delay: Duration.zero,
         enabled: false,
       );
@@ -126,7 +127,7 @@ void main() {
       await MayrFakeApi.init(
         basePath: 'test/assets/api',
         attachTo: dio,
-        assetLoader: FlutterAssetLoader(),
+        assetLoader: FlutterAssetLoader(rootBundle),
         delay: const Duration(milliseconds: 100),
       );
 
@@ -141,7 +142,7 @@ void main() {
       await MayrFakeApi.init(
         basePath: 'test/assets/api',
         attachTo: dio,
-        assetLoader: FlutterAssetLoader(),
+        assetLoader: FlutterAssetLoader(rootBundle),
         delay: Duration.zero,
       );
 
@@ -163,7 +164,7 @@ void main() {
       await MayrFakeApi.init(
         basePath: 'test/assets/api',
         attachTo: dio,
-        assetLoader: FlutterAssetLoader(),
+        assetLoader: FlutterAssetLoader(rootBundle),
         delay: Duration.zero,
       );
 
@@ -177,7 +178,7 @@ void main() {
       await MayrFakeApi.init(
         basePath: 'test/assets/api',
         attachTo: dio,
-        assetLoader: FlutterAssetLoader(),
+        assetLoader: FlutterAssetLoader(rootBundle),
         delay: Duration.zero,
       );
 
@@ -202,7 +203,7 @@ void main() {
       await MayrFakeApi.init(
         basePath: 'test/assets/api',
         attachTo: dio,
-        assetLoader: FlutterAssetLoader(),
+        assetLoader: FlutterAssetLoader(rootBundle),
         delay: Duration.zero,
         customPlaceholders: {'customValue': () => 'MyCustomValue'},
       );
@@ -218,7 +219,7 @@ void main() {
       await MayrFakeApi.init(
         basePath: 'test/assets/api',
         attachTo: dio,
-        assetLoader: FlutterAssetLoader(),
+        assetLoader: FlutterAssetLoader(rootBundle),
         delay: Duration.zero,
         customPlaceholders: {'customValue': () => 'Value${++counter}'},
       );
@@ -234,7 +235,7 @@ void main() {
       await MayrFakeApi.init(
         basePath: 'test/assets/api',
         attachTo: dio,
-        assetLoader: FlutterAssetLoader(),
+        assetLoader: FlutterAssetLoader(rootBundle),
         delay: Duration.zero,
       );
 
@@ -320,7 +321,7 @@ void main() {
       await MayrFakeApi.init(
         basePath: 'test/assets/api',
         attachTo: dio,
-        assetLoader: FlutterAssetLoader(),
+        assetLoader: FlutterAssetLoader(rootBundle),
         delay: Duration.zero,
       );
 

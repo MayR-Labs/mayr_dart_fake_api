@@ -1,11 +1,23 @@
-import 'package:flutter/services.dart';
 import 'asset_loader.dart';
 
 /// Flutter asset bundle-based loader
-/// This loader uses Flutter's rootBundle to load assets
+/// Uses Flutter's rootBundle to load assets
+/// 
+/// Usage:
+/// ```dart
+/// import 'package:flutter/services.dart';
+/// import 'package:mayr_fake_api/mayr_fake_api.dart';
+/// 
+/// final loader = FlutterAssetLoader(rootBundle);
+/// ```
 class FlutterAssetLoader implements AssetLoader {
-  /// Creates a new Flutter asset loader
-  FlutterAssetLoader();
+  /// The asset bundle to load from (typically rootBundle from Flutter)
+  final dynamic rootBundle;
+
+  /// Creates a new Flutter asset loader with the given rootBundle
+  /// 
+  /// [rootBundle] - The Flutter AssetBundle (import from 'package:flutter/services.dart')
+  FlutterAssetLoader(this.rootBundle);
 
   @override
   Future<String> loadString(String path) async {

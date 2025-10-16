@@ -18,9 +18,6 @@ dependencies:
   http: ^1.0.0
   uuid: ^4.0.0
   faker: ^2.2.0
-  # Flutter is now optional - only needed if using FlutterAssetLoader
-  flutter:
-    sdk: flutter
 
 dev_dependencies:
   test: ^1.24.0

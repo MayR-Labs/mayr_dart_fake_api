@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter/services.dart';
 import 'package:mayr_fake_api/mayr_fake_api.dart';
 
 void main() {
@@ -60,7 +61,7 @@ void main() {
       await MayrFakeApi.init(
         basePath: 'assets/api',
         attachTo: dio,
-        assetLoader: FlutterAssetLoader(),
+        assetLoader: FlutterAssetLoader(rootBundle),
       );
 
       expect(dio.interceptors.length, greaterThan(0));
@@ -70,7 +71,7 @@ void main() {
       await MayrFakeApi.init(
         basePath: 'assets/api',
         attachTo: dio,
-        assetLoader: FlutterAssetLoader(),
+        assetLoader: FlutterAssetLoader(rootBundle),
         delay: const Duration(milliseconds: 100),
       );
 
@@ -81,7 +82,7 @@ void main() {
       await MayrFakeApi.init(
         basePath: 'assets/api',
         attachTo: dio,
-        assetLoader: FlutterAssetLoader(),
+        assetLoader: FlutterAssetLoader(rootBundle),
         enabled: false,
       );
 
@@ -92,7 +93,7 @@ void main() {
       await MayrFakeApi.init(
         basePath: 'assets/api',
         attachTo: dio,
-        assetLoader: FlutterAssetLoader(),
+        assetLoader: FlutterAssetLoader(rootBundle),
         resolveNotFound: (path, method) {
           return const MayrFakeResponse(
             statusCode: 404,
@@ -109,7 +110,7 @@ void main() {
     test('creates interceptor with required parameters', () {
       final interceptor = MayrFakeInterceptor(
         basePath: 'assets/api',
-        assetLoader: FlutterAssetLoader(),
+        assetLoader: FlutterAssetLoader(rootBundle),
       );
 
       expect(interceptor.basePath, 'assets/api');
@@ -120,7 +121,7 @@ void main() {
     test('creates interceptor with custom parameters', () {
       final interceptor = MayrFakeInterceptor(
         basePath: 'test/assets/api',
-        assetLoader: FlutterAssetLoader(),
+        assetLoader: FlutterAssetLoader(rootBundle),
         delay: const Duration(milliseconds: 100),
         enabled: false,
       );
@@ -133,7 +134,7 @@ void main() {
     test('creates interceptor with custom not found resolver', () {
       final interceptor = MayrFakeInterceptor(
         basePath: 'assets/api',
-        assetLoader: FlutterAssetLoader(),
+        assetLoader: FlutterAssetLoader(rootBundle),
         resolveNotFound: (path, method) {
           return const MayrFakeResponse(
             statusCode: 404,

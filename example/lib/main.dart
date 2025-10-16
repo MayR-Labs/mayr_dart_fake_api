@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:dio/dio.dart';
 import 'package:mayr_fake_api/mayr_fake_api.dart';
 
@@ -13,7 +14,7 @@ void main() async {
   await MayrFakeApi.init(
     basePath: 'assets/api',
     attachTo: dio,
-    assetLoader: FlutterAssetLoader(), // Explicitly use Flutter's asset loader
+    assetLoader: FlutterAssetLoader(rootBundle), // Pass rootBundle to FlutterAssetLoader
     delay: const Duration(milliseconds: 500),
     enabled: kDebugMode,
     resolveNotFound: (path, method) {
