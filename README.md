@@ -1,5 +1,5 @@
 ![License](https://img.shields.io/badge/license-MIT-blue.svg?label=Licence)
-![Platform](https://img.shields.io/badge/Platform-Flutter-blue.svg)
+![Platform](https://img.shields.io/badge/Platform-Dart%20%7C%20Flutter-blue.svg)
 
 ![Pub Version](https://img.shields.io/pub/v/mayr_fake_api?style=plastic&label=Version)
 ![Pub.dev Score](https://img.shields.io/pub/points/mayr_fake_api?label=Score&style=plastic)
@@ -7,10 +7,10 @@
 ![Pub.dev Publisher](https://img.shields.io/pub/publisher/mayr_fake_api?label=Publisher&style=plastic)
 ![Downloads](https://img.shields.io/pub/dm/mayr_fake_api.svg?label=Downloads&style=plastic)
 
-![Build Status](https://img.shields.io/github/actions/workflow/status/YoungMayor/mayr_flutter_fake_api/ci.yaml?label=Build)
-![Issues](https://img.shields.io/github/issues/YoungMayor/mayr_flutter_fake_api.svg?label=Issues)
-![Last Commit](https://img.shields.io/github/last-commit/YoungMayor/mayr_flutter_fake_api.svg?label=Latest%20Commit)
-![Contributors](https://img.shields.io/github/contributors/YoungMayor/mayr_flutter_fake_api.svg?label=Contributors)
+![Build Status](https://img.shields.io/github/actions/workflow/status/MayR-Labs/mayr_dart_fake_api/ci.yaml?label=Build)
+![Issues](https://img.shields.io/github/issues/MayR-Labs/mayr_dart_fake_api.svg?label=Issues)
+![Last Commit](https://img.shields.io/github/last-commit/MayR-Labs/mayr_dart_fake_api.svg?label=Latest%20Commit)
+![Contributors](https://img.shields.io/github/contributors/MayR-Labs/mayr_dart_fake_api.svg?label=Contributors)
 
 
 # 🧪 mayr_fake_api
@@ -55,7 +55,7 @@ Add this to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  mayr_fake_api: ^1.0.0
+  mayr_fake_api: ^1.1.0
 ```
 
 Then import it:
@@ -63,6 +63,8 @@ Then import it:
 ```dart
 import 'package:mayr_fake_api/mayr_fake_api.dart';
 ```
+
+> **⚠️ Migrating from v1.0.0?** See the [Migration Guide](MIGRATION_GUIDE.md) for breaking changes.
 
 ---
 
@@ -119,10 +121,12 @@ And the JSON structures should contain statusCode and data. Example
 
 ## 🧱 Example Usage
 
-### 1. Simple setup
+### 1. Flutter App Setup
 
 ```dart
-
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:dio/dio.dart';
 import 'package:mayr_fake_api/mayr_fake_api.dart';
 
@@ -134,23 +138,58 @@ void main() async {
   await MayrFakeApi.init(
     basePath: 'assets/api',
     attachTo: dio,
+    assetLoader: FlutterAssetLoader(rootBundle), // Explicitly use Flutter's asset loader
     delay: Duration(milliseconds: 500),
     enabled: kDebugMode,
-    // resolveNotFound: ...
-    //
   );
 
   runApp(MyApp());
 }
 ```
 
-### 2. Make a request
+**Note**: For Flutter apps, you must register assets in your `pubspec.yaml`:
+
+```yaml
+flutter:
+  assets:
+    - assets/api/
+    - assets/api/user/
+    - assets/api/user/profile/
+```
+
+### 2. Pure Dart App Setup
+
+```dart
+import 'package:dio/dio.dart';
+import 'package:mayr_fake_api/mayr_fake_api.dart';
+
+void main() async {
+  final dio = Dio();
+
+  await MayrFakeApi.init(
+    basePath: 'path/to/api/files',  // File system path
+    attachTo: dio,
+    delay: Duration(milliseconds: 500),
+    enabled: true,
+  );
+
+  // Now use dio to make requests
+  final response = await dio.get('https://api.example.com/api/user/profile');
+  print(response.data);
+}
+```
+
+**Note**: For pure Dart apps, the `basePath` points to a directory on your file system where JSON files are stored.
+
+### 3. Make a request
 
 ```dart
 final response = await dio.get('https://example.com/api/user/profile');
 ```
 
-This will attempt to load `api/user/profile/get.json`.
+This will attempt to load `api/user/profile/get.json` from either:
+- Flutter assets (when using FlutterAssetLoader)
+- File system (when using FileAssetLoader)
 
 ---
 

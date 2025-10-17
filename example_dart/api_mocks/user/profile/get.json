@@ -1,0 +1,9 @@
+{
+  "statusCode": 200,
+  "data": {
+    "id": "$uuid",
+    "name": "$userFullName",
+    "email": "$userEmail",
+    "createdAt": "$timestamp"
+  }
+}

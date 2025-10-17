@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
-import 'package:flutter/services.dart';
 import 'package:path/path.dart' as p;
+import 'asset_loader.dart';
 import 'mayr_fake_response.dart';
 import 'placeholder_replacer.dart';
 
@@ -23,9 +23,13 @@ class MayrFakeInterceptor extends Interceptor {
   /// Map of placeholder names (without $) to resolver functions
   final Map<String, String Function()> customPlaceholders;
 
+  /// Asset loader for loading files
+  final AssetLoader assetLoader;
+
   /// Creates a new interceptor
   MayrFakeInterceptor({
     required this.basePath,
+    required this.assetLoader,
     this.delay = const Duration(milliseconds: 500),
     this.enabled = true,
     this.resolveNotFound,
@@ -196,7 +200,7 @@ class MayrFakeInterceptor extends Interceptor {
     RequestOptions options,
   ) async {
     try {
-      final content = await rootBundle.loadString(path);
+      final content = await assetLoader.loadString(path);
 
       // Handle empty files (204 No Content)
       if (content.trim().isEmpty) {

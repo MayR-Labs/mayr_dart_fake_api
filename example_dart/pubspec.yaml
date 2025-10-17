@@ -1,0 +1,12 @@
+name: mayr_fake_api_dart_example
+description: Example of using mayr_fake_api in a pure Dart application
+publish_to: 'none'
+version: 1.0.0
+
+environment:
+  sdk: ^3.9.2
+
+dependencies:
+  dio: ^5.0.0
+  mayr_fake_api:
+    path: ../
